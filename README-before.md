@@ -43,11 +43,11 @@ SNSによる歩きスマホをする人を減らすことができる。
 特になし
 
 #### API・データ
-* Text To Speech(Androidのテキスト読み上げライブラリ)
-* RecognizerIntent(Androidの音声認識ライブラリ)
+* 形態素解析API (NTTレゾナント)
 
 #### フレームワーク・ライブラリ・モジュール
-特になし
+* TextToSpeech (Androidのテキスト読み上げライブラリ)
+* RecognizerIntent (Androidの音声認識ライブラリ
 
 #### デバイス
 * Android端末
