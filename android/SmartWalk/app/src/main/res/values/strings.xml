@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">SmartWalk</string>
+    <string name="description">このアプリをバックグラウンドで\n起動している間、LINE通知を受け取ります。</string>
+    <string name="last_message">最後のメッセージ</string>
+    <string name="no_message">受け取ったメッセージはまだありません。</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
