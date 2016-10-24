@@ -13,24 +13,28 @@ public class SmartWalkFragmentManager {
 
     private AppCompatActivity mActivity;
     private FragmentManager mFM;
+    private TextToSpeechManager mTTS;
 
     private LINESettingsFragment mFragmentLINESettings;
 
     public SmartWalkFragmentManager(AppCompatActivity activity) {
         mActivity = activity;
-        mFM = activity.getSupportFragmentManager();
-        findFragments();
+        mFM = mActivity.getSupportFragmentManager();
+        mTTS = new TextToSpeechManager(mActivity);
+        initFragments();
     }
 
     /**
-     * フラグメントのインスタンスをメンバ変数として取得
+     * フラグメントの初期化として、インスタンス取得とTTSの設定を行う
+     * 対応SNSが増えたらここに追加していく
      */
-    private void findFragments() {
+    private void initFragments() {
         mFragmentLINESettings = (LINESettingsFragment) mFM.findFragmentById(R.id.fragment_line_settings);
+        mFragmentLINESettings.setTextToSpeechManager(mTTS);
     }
 
     /**
-     * フラグメントを入れ替える(フラグメント管理用クラスに分けたい)
+     * フラグメントを入れ替える
      * @param rootViewID フラグメントを入れ替える対象となるViewのID
      * @param fragment rootViewIDの中身と入れ替えて表示するフラグメント
      */
