@@ -24,6 +24,7 @@ public class LINESettingsFragment extends Fragment {
 
     private Activity mActivity;
     private View mFragment;
+    private TextToSpeechManager mTTS;
 
     private TextView mTextMessage;
 
@@ -35,7 +36,7 @@ public class LINESettingsFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof LINESettingsListener) mListener = (LINESettingsListener) context;
-        else throw new RuntimeException(context.toString() + " must implement LINESettingsListener");
+        //else throw new RuntimeException(context.toString() + " must implement LINESettingsListener");
     }
 
     @Override
@@ -75,6 +76,14 @@ public class LINESettingsFragment extends Fragment {
         if (mListener != null) {
             // mListener.onFragmentInteraction(uri);
         }
+    }
+
+    /**
+     * LINESettingsFragmentで使用するTextToSpeechManagerをセットする。
+     * @param TTS TextToSpeechManager
+     */
+    public void setTextToSpeechManager(TextToSpeechManager TTS) {
+        mTTS = TTS;
     }
 
     @Override
