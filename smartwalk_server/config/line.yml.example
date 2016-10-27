@@ -1,0 +1,11 @@
+production:
+  channel_secret: __CHANNEL_SECRET__
+  channel_token: __CHANNEL_TOKEN__
+
+development:
+  channel_secret: __CHANNEL_SECRET__
+  channel_token: __CHANNEL_TOKEN__
+
+test:
+  channel_secret: __CHANNEL_SECRET__
+  channel_token: __CHANNEL_TOKEN__
