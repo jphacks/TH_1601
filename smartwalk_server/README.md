@@ -26,6 +26,10 @@ Things you may want to cover:
 ## How to install
 
 ```
+# Install dependencies.
+sudo apt install ruby ruby-dev
+sudo gem install bundler
+
 # Move to project directory.
 cd smartwalk_server
 
