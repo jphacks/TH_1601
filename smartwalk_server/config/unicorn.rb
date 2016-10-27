@@ -6,7 +6,7 @@ worker_processes 2
 timeout 8
 preload_app true
 
-listen File.expand_path("tmp/sockets/smartwalk-unicorn.socket", rails_root)
+listen File.expand_path("tmp/sockets/unicorn.socket", rails_root)
 pid File.expand_path("tmp/pids/unicorn.pid", rails_root)
 
 before_fork do |server, worker|
