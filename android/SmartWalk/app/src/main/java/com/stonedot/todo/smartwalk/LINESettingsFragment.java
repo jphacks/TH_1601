@@ -92,12 +92,5 @@ public class LINESettingsFragment extends Fragment {
         } catch (Exception e) {
             Toast.makeText(mActivity, "LINEアプリをインストールしてください", Toast.LENGTH_SHORT).show();
         }
-
-        /*
-        MotionEvent ev = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis() + 100, MotionEvent.ACTION_DOWN, 310.0f, 870.0f, 0);
-        webView1.dispatchTouchEvent(ev);
-        ev = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis() + 100, MotionEvent.ACTION_UP, 309.0f, 872.0f, 0);
-        webView1.dispatchTouchEvent(ev);
-        */
     }
 }
