@@ -7,17 +7,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LINESettingsFragment extends Fragment {
+public class LINEFragment extends Fragment {
 
     private Activity mActivity;
     private View mFragment;
@@ -63,7 +61,6 @@ public class LINESettingsFragment extends Fragment {
     }
 
     private BroadcastReceiver onNotice = new BroadcastReceiver() {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             String sender = intent.getStringExtra(LINENotificationService.KEY_SENDER);
@@ -93,4 +90,6 @@ public class LINESettingsFragment extends Fragment {
             Toast.makeText(mActivity, "LINEアプリをインストールしてください", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 }

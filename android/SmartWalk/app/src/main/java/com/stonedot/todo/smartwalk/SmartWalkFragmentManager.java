@@ -15,7 +15,7 @@ public class SmartWalkFragmentManager {
     private FragmentManager mFM;
     private TextToSpeechManager mTTS;
 
-    private LINESettingsFragment mFragmentLINESettings;
+    private LINEFragment mFragmentLINESettings;
 
     public SmartWalkFragmentManager(AppCompatActivity activity) {
         mActivity = activity;
@@ -29,7 +29,7 @@ public class SmartWalkFragmentManager {
      * 対応SNSが増えたらここに追加していく
      */
     private void initFragments() {
-        mFragmentLINESettings = (LINESettingsFragment) mFM.findFragmentById(R.id.fragment_line_settings);
+        mFragmentLINESettings = (LINEFragment) mFM.findFragmentById(R.id.fragment_line_settings);
         mFragmentLINESettings.setTextToSpeechManager(mTTS);
     }
 

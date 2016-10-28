@@ -39,11 +39,20 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
     public void speechText(String text) {
         if (mTTS == null || text.length() <= 0 || !mInitCompletedFlag) return;
         if (mTTS.isSpeaking()) mTTS.stop();
-        mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        mTTS.speak(removePictureChars(text), TextToSpeech.QUEUE_FLUSH, null);
     }
 
     // TODO どこでシャットダウンしようか…
     public void shutdown() {
         if(mTTS != null) mTTS.shutdown();
+    }
+
+    private String removePictureChars(String text) {
+        StringBuffer buffer = new StringBuffer();
+        for(char c : text.toCharArray()) {
+            if(Character.UnicodeBlock.of(c) == Character.UnicodeBlock.PRIVATE_USE_AREA) continue;
+            buffer.append(c);
+        }
+        return buffer.toString();
     }
 }
