@@ -8,6 +8,9 @@ class MessageController < ApplicationController
       type: 'text',
       text: json['message']
     }
+
+    logger.debug("Start pushing message...")
+
     response = line_client.push_message(receiver, message)
 
     logger.debug(response.code)
