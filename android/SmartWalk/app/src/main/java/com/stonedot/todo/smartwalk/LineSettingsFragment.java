@@ -7,35 +7,26 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class LINESettingsFragment extends Fragment {
 
-    public interface LINESettingsListener {
-        // TODO: Update argument type and name
-        // void onFragmentInteraction(Uri uri);
-    }
-    private LINESettingsListener mListener;
-
     private Activity mActivity;
     private View mFragment;
+    private TextToSpeechManager mTTS;
 
     private TextView mTextMessage;
 
-    private LINENotificationService mLINEService;
-
-    public void LINESettingsFragment() {}
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof LINESettingsListener) mListener = (LINESettingsListener) context;
-        else throw new RuntimeException(context.toString() + " must implement LINESettingsListener");
+    public void setTextToSpeechManager(TextToSpeechManager tts) {
+        mTTS = tts;
     }
 
     @Override
@@ -44,17 +35,8 @@ public class LINESettingsFragment extends Fragment {
         mFragment = inflater.inflate(R.layout.fragment_line_settings, container, false);
         findViews();
         attachEvents();
-        init();
+        notificationServiceStart();
         return mFragment;
-    }
-
-    /**
-     * フラグメントが生成されたときに実行される初期化関数
-     */
-    private void init() {
-        Intent intent = new Intent(mActivity, LINENotificationService.class);
-        mActivity.startService(intent);
-        LocalBroadcastManager.getInstance(mActivity).registerReceiver(onNotice, new IntentFilter("Msg"));
     }
 
     /**
@@ -70,26 +52,52 @@ public class LINESettingsFragment extends Fragment {
     private void attachEvents() {
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            // mListener.onFragmentInteraction(uri);
-        }
+    /**
+     * NotificatonListenerServiceの開始処理
+     */
+    private void notificationServiceStart() {
+        Intent intent = new Intent(mActivity, LINENotificationService.class);
+        mActivity.startService(intent);
+        IntentFilter filter = new IntentFilter(LINENotificationService.PACKAGE_NAME);
+        LocalBroadcastManager.getInstance(mActivity).registerReceiver(onNotice, filter);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    private BroadcastReceiver onNotice= new BroadcastReceiver() {
+    private BroadcastReceiver onNotice = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String pack = intent.getStringExtra("package");
-            String title = intent.getStringExtra("title");
-            String text = intent.getStringExtra("text");
-            mTextMessage.setText(text);
+            String sender = intent.getStringExtra(LINENotificationService.KEY_SENDER);
+            String content = intent.getStringExtra(LINENotificationService.KEY_CONTENT);
+            mTextMessage.setText(sender + "\n" + content);
+            speech(sender, content);
+            // reply(sender);
         }
     };
+
+    // TODO 通知時のメッセージ形式
+    private void speech(String sender, String content) {
+        if(mTTS == null) return;
+        String format = mActivity.getString(R.string.format_line);
+        String text = sender + format + content;
+        mTTS.speechText(text);
+    }
+
+    // TODO よく考えたら自動返信とかめっちゃ危険じゃん！
+    private void reply(String sender) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("line://msg/text/ありがとう"));
+        try {
+            mActivity.startActivityForResult(intent, 0);
+        } catch (Exception e) {
+            Toast.makeText(mActivity, "LINEアプリをインストールしてください", Toast.LENGTH_SHORT).show();
+        }
+
+        /*
+        MotionEvent ev = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis() + 100, MotionEvent.ACTION_DOWN, 310.0f, 870.0f, 0);
+        webView1.dispatchTouchEvent(ev);
+        ev = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis() + 100, MotionEvent.ACTION_UP, 309.0f, 872.0f, 0);
+        webView1.dispatchTouchEvent(ev);
+        */
+    }
 }
