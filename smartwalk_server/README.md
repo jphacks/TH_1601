@@ -56,10 +56,27 @@ editor /etc/nginx/sites-available/smartwalk
 # Enable your nginx settings.
 ln -s /etc/nginx/sites-available/smartwalk /etc/nginx/sites-enabled/smartwalk
 
+# Run database migration.
+bin/rails db:migrate
+
 # Run unicorn.
 cd /var/nginx/TH_1601/smartwalk_server
 bin/rails unicorn:start
 
 # Run nginx.
 sudo service nginx restart
+```
+
+## Exposed API
++ POST /message/push
+
+JSON example:
+
+```
+{
+	"sender": "ユーザー識別子",
+#	"receiver": "表示名",
+    "receiver": "ユーザー識別子"
+	"message": "送信するメッセージ"
+}
 ```
