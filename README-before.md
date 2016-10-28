@@ -1,5 +1,4 @@
-# サンプル（プロダクト名）
-SmartWalk
+# SmartWalk
 
 ## 製品概要
 ### Safe Tech　―”安全”と”便利さ”の両立―
