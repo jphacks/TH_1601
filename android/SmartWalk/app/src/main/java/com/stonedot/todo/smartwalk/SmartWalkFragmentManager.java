@@ -14,13 +14,15 @@ public class SmartWalkFragmentManager {
     private AppCompatActivity mActivity;
     private FragmentManager mFM;
     private TextToSpeechManager mTTS;
+    private TextToSpeechFinishListenerImpl mFinishListener;
 
     private LINEFragment mFragmentLINESettings;
 
-    public SmartWalkFragmentManager(AppCompatActivity activity) {
+    public SmartWalkFragmentManager(AppCompatActivity activity, TextToSpeechFinishListenerImpl.SpeechFinishListener listener) {
         mActivity = activity;
         mFM = mActivity.getSupportFragmentManager();
-        mTTS = new TextToSpeechManager(mActivity);
+        mFinishListener = new TextToSpeechFinishListenerImpl(listener);
+        mTTS = new TextToSpeechManager(mActivity, mFinishListener); // TODO こいつがTextToSpeechを持つのはおかしい。LINEFragmentがNotificationListenerを持ってるのが悪い
         initFragments();
     }
 
