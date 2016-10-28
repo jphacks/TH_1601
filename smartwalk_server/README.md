@@ -68,7 +68,7 @@ sudo service nginx restart
 ```
 
 ## Exposed API
-+ POST /message/push
++ POST /message/push Content-Type: application/json
 
 JSON example:
 
