@@ -1,6 +1,6 @@
 class MessageController < ApplicationController
   def push
-    body = request.body.string
+    body = request.body.read
     json = JSON.parse(body)
     # sender = json['sender']
     receiver = json['receiver']
