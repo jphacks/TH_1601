@@ -16,7 +16,7 @@ import json
 class Period_putter():
 
 	def __init__(self):
-		self.clf = joblib.load('clf.pkl')
+		self.clf = joblib.load('clf2.pkl')
 		self.all_pos_list = ['名詞', '名詞接尾辞', '冠名詞', '英語接尾辞', '動詞語幹', '動詞活用語尾', '動詞接尾辞', '冠動詞', '補助名詞', '形容詞語幹', '形容詞接尾辞', '冠形容詞', '連体詞', '連用詞', '接続詞', '独立詞', '接続接尾辞', '判定詞', '格助詞', '引用助詞', '連用助詞', '終助詞', '間投詞', '括弧', '句点', '読点', 'Symbol', 'Year', 'Month', 'Day', 'YearMonth', 'MonthDay', 'Hour', 'Minute', 'Second', 'HourMinute', 'MinuteSecond', 'PreHour', 'PostHour', 'Number', '助数詞', '助助数詞', '冠数詞', 'Alphabet', 'Kana', 'Katakana', 'Kanji', 'Roman', 'Undef']
 
 	#ベクトルを2値ベクトルに変換
@@ -40,18 +40,23 @@ class Period_putter():
 		#句点のない文章だからここでは必ず1文になるはずだけど，一応文分割処理入れておく
 		for sentence in sentences:
 			for pos in sentence:
-				pos_list.append(pos[0])
+				pos_list.append(pos[1])
 
 		n = len(pos_list)
 		#句点の入る位置と思われる場所を基準として[2つ前，1つ前，基準, 1つ後，2つ後]
 		vec_dec = [-1, -1, -1, -1]
 		vecs = []
-		for i in range(0, n-1):
+		for i in range(-1, n):
 			vec_dec[0] = vec_dec[1]
-			vec_dec[1] = pos_list[i] if vec_dec[2] == -1 else vec_dec[2]
-			vec_dec[2] = pos_list[i+1] if vec_dec[3] == -1 else vec_dec[3]
+			if i > -1:
+				vec_dec[1] = pos_list[i] if vec_dec[2] == -1 else vec_dec[2]
+			if i <= 0:
+				vec_dec[2] = pos_list[i+1]
+			elif i > n-2 or vec_dec[3] == -1:
+				vec_dec[2] = -1
+			else:
+				vec_dec[2] = vec_dec[3]
 			vec_dec[3] = pos_list[i+2] if i < n-2 else -1
-			print(vec_dec)
 			vecs.append(self.to_binary_vec(vec_dec))
 		return vecs
 
@@ -59,7 +64,7 @@ class Period_putter():
 	#形態素解析APIにPOSTを投げる
 	def post(self, contents):
 		url = "https://labs.goo.ne.jp/api/morph"
-		data = {"app_id":"93a5bf3d466870df366b5e860277fcf930695424168936452c31dfff0b8218a0", "sentence":contents, "info_filter":"pos"}
+		data = {"app_id":"93a5bf3d466870df366b5e860277fcf930695424168936452c31dfff0b8218a0", "sentence":contents, "info_filter":"form|pos"}
 		json_data = json.dumps(data).encode("utf-8")
 		method = "POST"
 		headers = {"Content-Type" : "application/json"}
@@ -74,15 +79,36 @@ class Period_putter():
 	#SVMで分類
 	def classify(self,vecs):
 		classes = self.clf.predict(np.array(vecs))
-		print(classes)
+		return list(classes)
+
+	def put(self, result, classes):
+		sentences = json.loads(result)["word_list"]
+		form_list = []
+
+		#句点のない文章だからここでは必ず1文になるはずだけど，一応文分割処理入れておく
+		for sentence in sentences:
+			for pos in sentence:
+				form_list.append(pos[0])
+
+		ret_string = ""
+		len_form = len(form_list)
+		for i, c in enumerate(classes):
+			if i < len_form:
+				ret_string += form_list[i]
+			if c == 1.0:
+				ret_string += "。"
+		return ret_string
+
+
 
 	#ピリオド挿入プロセス全体
 	def put_period(self, plane_string):
-		print(plane_string)
 		result_json = self.post(plane_string)
 		vecs_binary = self.make_vec(result_json)
-		string_with_period = self.classify(vecs_binary)
-		return
+		classification_results = self.classify(vecs_binary)
+		string_with_period = self.put(result_json, classification_results)
+
+		return string_with_period
 
 pp = Period_putter()
-pp.put_period("分かったお大事にね")
+print(pp.put_period("今日のバイト，インフルエンザで無理っぽい代わりに出れる"))
