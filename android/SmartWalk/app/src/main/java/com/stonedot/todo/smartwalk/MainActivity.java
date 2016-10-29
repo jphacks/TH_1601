@@ -7,6 +7,7 @@ import android.speech.SpeechRecognizer;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import jp.line.android.sdk.LineSdkContextManager;
 
 public class MainActivity extends AppCompatActivity implements
         SpeechRecognitionListenerImpl.SpeechListener,
@@ -26,6 +27,9 @@ public class MainActivity extends AppCompatActivity implements
         recognitionListener = new SpeechRecognitionListenerImpl(this, this);
         mSR = SpeechRecognizer.createSpeechRecognizer(this);
         mSR.setRecognitionListener(recognitionListener);
+
+        // LineSDK を初期化
+        LineSdkContextManager.initialize(this);
 
         speechTest();
     }
