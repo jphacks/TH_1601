@@ -164,5 +164,9 @@ public class LINEFragment extends Fragment {
         }
     }
 
+    public void displayText(String sender, String content) {
+        mTextMessage.setText(sender + "\n" + content);
+    }
+
 
 }

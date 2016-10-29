@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements
     private SpeechToTextManager mSTT;
 
     private FragmentManager mFM;
-    private LINESettingsFragment mLINESettingsFragment;
+    private LINEFragment mLINEFragment;
     private LINEBroadcastReceiver mLINEReceiver;
 
     @Override
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // フラグメント関係
         mFM = getSupportFragmentManager();
-        mLINESettingsFragment = (LINESettingsFragment) mFM.findFragmentById(R.id.fragment_line);
+        mLINEFragment = (LINEFragment) mFM.findFragmentById(R.id.fragment_line);
 
         // 音声関連のマネージャー
         mTTS = new TextToSpeechManager(this, this);
@@ -79,6 +79,6 @@ public class MainActivity extends AppCompatActivity implements
         String format = getString(R.string.format_line);
         String text = sender + format + content;
         mTTS.speechText(text);
-        mLINESettingsFragment.displayText(sender, content);
+        mLINEFragment.displayText(sender, content);
     }
 }
