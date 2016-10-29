@@ -41,7 +41,6 @@ class Period_putter():
 		for sentence in sentences:
 			for pos in sentence:
 				pos_list.append(pos[1])
-
 		n = len(pos_list)
 		#句点の入る位置と思われる場所を基準として[2つ前，1つ前，基準, 1つ後，2つ後]
 		vec_dec = [-1, -1, -1, -1]
