@@ -13,6 +13,6 @@ class UsersController < ApplicationController
     mid = json['mid']
     user1 = User.find_by(friend_token: friend_token)
     user2 = User.find_by(mid: mid)
-    User.make_friend(user1, user2)
+    User.make_friend(user1, user2) ? :ok : :bad_request
   end
 end

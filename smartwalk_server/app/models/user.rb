@@ -23,9 +23,9 @@ class User < ApplicationRecord
         user1.save!
         user2.save!
       end
-      head :ok
+      true
     rescue
-      head :bad_request
+      false
     end
   end
 
