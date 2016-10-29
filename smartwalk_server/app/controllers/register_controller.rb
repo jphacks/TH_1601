@@ -1,6 +1,6 @@
 class RegisterController < ApplicationController
   def show
-    unless RegistrationToken.find_by(params[:id]) then
+    unless RegistrationToken.find_by(token: params[:id]) then
       render 'expire'
     end
     @link_target = 'smart-walk://register/' + params[:id]
@@ -12,7 +12,7 @@ class RegisterController < ApplicationController
     json = JSON.parse(body)
     token = json['token']
     mid = json['mid']
-    unless RegistrationToken.find_by(token) then
+    unless RegistrationToken.find_by(token: token) then
       render 'expire'
     end
     RegistrationToken.transaction do
