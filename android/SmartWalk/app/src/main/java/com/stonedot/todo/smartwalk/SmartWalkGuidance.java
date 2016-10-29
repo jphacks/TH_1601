@@ -20,29 +20,28 @@ import static com.stonedot.todo.smartwalk.Guide.StartReply;
 
 public class SmartWalkGuidance {
 
+    public interface GuidanceListener {
+        void onReserve(Reservation reservation);
+    }
+    private GuidanceListener mListener;
+
     private Activity mActivity;
     private TextToSpeechManager mTTS;
     private SpeechToTextManager mSTT;
+    private Reservation lastReservation;
 
-    private String lastSender = "";
-    private String lastContent = "";
-
-    public SmartWalkGuidance(Activity activity, TextToSpeechManager tts, SpeechToTextManager sst) {
+    public SmartWalkGuidance(Activity activity, GuidanceListener listener, TextToSpeechManager tts, SpeechToTextManager sst) {
         mActivity = activity;
+        mListener = listener;
         mTTS = tts;
         mSTT = sst;
     }
 
-    public void setLastSender(String name) {
-        lastSender = name;
-    }
-
-    public void setLastContent(String content) {
-        lastContent = content;
-    }
+    public void setLastReservation(Reservation reservation) { lastReservation = reservation; }
 
     private void reserve() {
-        // TODO 保留措置
+        if(mListener == null) return;
+        mListener.onReserve(lastReservation);
     }
 
     // TODO メッセージの割り込み対策
