@@ -45,8 +45,10 @@ public class LINEFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        Log.d("LineFragment", "Setting event listener.");
         mActivity = getActivity();
-        mFragment = inflater.inflate(R.layout.fragment_line_settings, container, false);
+        mFragment = inflater.inflate(R.layout.fragment_line, container, false);
         findViews();
         attachEvents();
         notificationServiceStart();
@@ -62,6 +64,7 @@ public class LINEFragment extends Fragment {
         mButtonLine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("LineFragment", "Clicked LINE login button.");
                 LineSdkContext sdkContext = LineSdkContextManager.getSdkContext();
                 LineAuthManager authManager = sdkContext.getAuthManager();
                 LineLoginFuture loginFuture = authManager.login(getActivity());

@@ -17,7 +17,7 @@ public class LINESettingsFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mActivity = getActivity();
-        mFragment = inflater.inflate(R.layout.fragment_line_settings, container, false);
+        mFragment = inflater.inflate(R.layout.fragment_line, container, false);
         findViews();
         attachEvents();
         return mFragment;

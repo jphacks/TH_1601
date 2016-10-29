@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import jp.line.android.sdk.LineSdkContextManager;
 
 public class MainActivity extends AppCompatActivity implements
         SpeechToTextListenerImpl.SpeechToTextListener,
@@ -29,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // フラグメント関係
         mFM = getSupportFragmentManager();
-        mLINESettingsFragment = (LINESettingsFragment) mFM.findFragmentById(R.id.fragment_line_settings);
+        mLINESettingsFragment = (LINESettingsFragment) mFM.findFragmentById(R.id.fragment_line);
 
         // 音声関連のマネージャー
         mTTS = new TextToSpeechManager(this, this);
