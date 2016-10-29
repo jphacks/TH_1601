@@ -20,7 +20,8 @@ class User < ApplicationRecord
   end
 
   def friend_url()
-    url_for controller: 'users', action: 'friend', id: friend_token
+    routes = Rails.application.routes.url_helpers
+    routes.url_for controller: 'users', action: 'friend', id: friend_token
   end
 
   def search_user(sender, displayName)
