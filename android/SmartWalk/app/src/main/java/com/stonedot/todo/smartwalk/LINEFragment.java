@@ -81,7 +81,7 @@ public class LINEFragment extends Fragment {
         }
     };
 
-    private static final String FILENAME_LINE_ID = "line_id";
+    public static final String FILENAME_LINE_ID = "line_id";
     private ApiRequestFutureListener myProfileComplete = new ApiRequestFutureListener<Profile>() {
         @Override
         public void requestComplete(ApiRequestFuture<Profile> future) {

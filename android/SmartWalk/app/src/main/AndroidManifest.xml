@@ -2,11 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.stonedot.todo.smartwalk">
 
-    <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
-    
+
     <application
-        android:name="com.stonedot.todo.smartwalk.SmartWalkApplication"
+        android:name=".SmartWalkApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,13 +15,22 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <activity android:name=".LINERegisterActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="smart-walk" android:host="register" />
+            </intent-filter>
+        </activity>
+
         <!-- LINE SDK Settings -->
-        <activity android:name="jp.line.android.sdk.activity.LineAuthCompleteActivity"
+        <activity
+            android:name="jp.line.android.sdk.activity.LineAuthCompleteActivity"
             android:configChanges="keyboard|orientation"
             android:exported="true"
             android:screenOrientation="sensor">
@@ -33,13 +42,14 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="jp.line.android.sdk.activity.WebLoginActivity"
-            android:exported="false"
+        <activity
+            android:name="jp.line.android.sdk.activity.WebLoginActivity"
             android:configChanges="keyboard|orientation"
-            android:screenOrientation="sensor">
-        </activity>
+            android:exported="false"
+            android:screenOrientation="sensor"></activity>
 
-        <service android:name="com.stonedot.todo.smartwalk.LINENotificationService"
+        <service
+            android:name=".LINENotificationService"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
