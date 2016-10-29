@@ -38,7 +38,7 @@ class CallbackController < ApplicationController
         user.status_message = json['statusMessage']
         user.save
         token = RegistrationToken.generate_token_for(user)
-        url = url_for controller: register, action: show, :id => token
+        url = url_for controller: 'register', action: 'show', :id => token
         message = {
           type: 'text',
           text: "以下のURLにアクセスして登録作業を続けてください。/n#{url}"
