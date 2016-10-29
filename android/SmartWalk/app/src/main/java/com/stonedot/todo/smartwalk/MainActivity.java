@@ -40,18 +40,6 @@ public class MainActivity extends AppCompatActivity implements
         // 通知関係
         NotificationServiceAccess.showNotificationAccessSettingMenu(this);
         mLINEReceiver = new LINEBroadcastReceiver(this, this);
-
-        speechTest();
-    }
-
-    private void speechTest() {
-        Button mSoundRecognizeButton = (Button) findViewById(R.id.sound_recognize);
-        mSoundRecognizeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSTT.speechToText(null);
-            }
-        });
     }
 
     private String lastText = "";

@@ -37,7 +37,6 @@ public class LINEFragment extends Fragment {
         mActivity = getActivity();
         mFragment = inflater.inflate(R.layout.fragment_line, container, false);
         findViews();
-        attachEvents();
         return mFragment;
     }
 
@@ -103,12 +102,6 @@ public class LINEFragment extends Fragment {
             }
         }
     };
-
-    /**
-     * ボタンが押されたときにhoge()を実行するなど、UIイベントと関数を結びつける
-     */
-    private void attachEvents() {
-    }
 
     public void displayText(String sender, String content) {
         mTextMessage.setText(sender + "\n" + content);
