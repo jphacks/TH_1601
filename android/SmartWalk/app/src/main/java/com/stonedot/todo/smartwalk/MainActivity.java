@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import jp.line.android.sdk.LineSdkContextManager;
 
 public class MainActivity extends AppCompatActivity implements
         SpeechToTextListenerImpl.SpeechToTextListener,
@@ -37,6 +38,9 @@ public class MainActivity extends AppCompatActivity implements
         // 通知関係
         NotificationServiceAccess.showNotificationAccessSettingMenu(this);
         mLINEReceiver = new LINEBroadcastReceiver(this, this);
+
+        // LineSDK を初期化
+        LineSdkContextManager.initialize(this);
 
         speechTest();
     }

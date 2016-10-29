@@ -43,14 +43,19 @@ Android端末の加速度センサや歩行検知器を用いて、歩きなが�
 
 ## 開発技術
 ### 活用した外部技術
-特になし
+* さくらのクラウド
 
 #### API・データ
-形態素解析API (NTTレゾナント）
+* 形態素解析API (NTTレゾナント）
 
 #### フレームワーク・ライブラリ・モジュール
-TextToSpeech (Androidのテキスト読み上げライブラリ)
-RecognizerIntent (Androidの音声認識ライブラリ）
+* TextToSpeech (Androidのテキスト読み上げライブラリ)
+* RecognizerIntent (Androidの音声認識ライブラリ
+* Line::Bot::API (SDK of the LINE Messaging API for Ruby)
+* Ruby on Rails
+* Unicorn
+* Nginx
+* Sqlite
 
 #### デバイス
 Android端末
@@ -62,4 +67,3 @@ Android端末
 
 #### 研究内容（任意）
 * もし、製品に研究内容を用いた場合は、研究内容の詳細及び具体的な活用法について、こちらに記載をしてください。
-* 
