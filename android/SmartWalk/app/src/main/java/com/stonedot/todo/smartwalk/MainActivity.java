@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity implements
 
         // フラグメント関係
         mFM = getSupportFragmentManager();
-        mLINEFragment = (LINEFragment) mFM.findFragmentById(R.id.fragment_line_settings);
+
+        mLINEFragment = (LINEFragment) mFM.findFragmentById(R.id.fragment_line);
 
         // 音声関連のマネージャー
         mTTS = new TextToSpeechManager(this, this);
