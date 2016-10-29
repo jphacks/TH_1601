@@ -1,6 +1,7 @@
 package com.stonedot.todo.smartwalk;
 
 import android.speech.tts.UtteranceProgressListener;
+import android.util.Log;
 
 /**
  * Created by komatsu on 2016/10/29.
@@ -26,6 +27,7 @@ public class TextToSpeechProgressListener extends UtteranceProgressListener {
     @Override
     public void onDone(String s) {
         Guide guide = Guide.valueOf(s);
+        Log.d("onDone", s + ":" + guide);
         mListener.onTextToSpeechFinished(guide);
     }
 

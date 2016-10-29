@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class SpeechToTextListenerImpl implements RecognitionListener {
 
     public interface SpeechToTextListener {
-        void onGetTextFromSpeech(String text);
+        void onGetTextFromSpeech(String text, Guide guide);
         void onGetTextFromSpeechFailed();
     }
     private SpeechToTextListener mListener;
@@ -97,8 +97,8 @@ public class SpeechToTextListenerImpl implements RecognitionListener {
     public void onResults(Bundle bundle) {
         // TODO Resultから一番ちゃんとしたものを選ぶ方法はある？
         ArrayList<String> results = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        Toast.makeText(mContext, results.get(0), Toast.LENGTH_SHORT).show();
-        if(mListener != null) mListener.onGetTextFromSpeech(results.get(0));
+        Guide guide = (Guide)bundle.get(Guide.Guide.toString());
+        if(mListener != null) mListener.onGetTextFromSpeech(results.get(0), guide);
     }
 
     @Override

@@ -8,7 +8,11 @@ public enum Guide {
     Guide,
     LINENotification,
     ConfirmReply,
+    GetAnswerConfirmReply,
     StartReply,
     RepeatReply,
-    FinishReply
+    ConfirmSend,
+    GetAnswerConfirmSend,
+    Send,
+    Finish
 }

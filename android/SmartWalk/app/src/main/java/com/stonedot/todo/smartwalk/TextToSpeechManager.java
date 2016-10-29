@@ -45,9 +45,9 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
 
     public void speechText(String text, Guide guide) {
         if (mTTS == null || text.length() <= 0 || !mInitCompletedFlag) return;
-        HashMap<String, String> myHashAlarm = new HashMap<String, String>();
-        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, guide.toString());
-        mTTS.speak(removePictureChars(text), TextToSpeech.QUEUE_ADD, myHashAlarm);
+        HashMap<String, String> parameter = new HashMap<String, String>();
+        parameter.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, guide.toString());
+        mTTS.speak(removePictureChars(text), TextToSpeech.QUEUE_ADD, parameter);
     }
 
     public void shutdown() {
