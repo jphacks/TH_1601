@@ -1,6 +1,6 @@
 package com.stonedot.todo.smartwalk;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -11,20 +11,28 @@ import android.speech.SpeechRecognizer;
 
 public class SpeechToTextManager {
 
+    private Activity mActivity;
     private SpeechRecognizer mSTT;
     private SpeechToTextListenerImpl mSTTListener;
 
-    public SpeechToTextManager(Context context, SpeechToTextListenerImpl.SpeechToTextListener listener) {
-        mSTTListener = new SpeechToTextListenerImpl(context, listener);
-        mSTT = SpeechRecognizer.createSpeechRecognizer(context);
+    public SpeechToTextManager(Activity activity, SpeechToTextListenerImpl.SpeechToTextListener listener) {
+        mActivity = activity;
+        mSTTListener = new SpeechToTextListenerImpl(activity, listener);
+        mSTT = SpeechRecognizer.createSpeechRecognizer(activity);
         mSTT.setRecognitionListener(mSTTListener);
     }
 
-    public void startSpeechToText(Guide guide) {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(Guide.Guide.toString(), guide);
-        mSTT.startListening(intent);
+    public void startSpeechToText(final Guide guide) {
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH); // ACTION_WEB_SEARCH
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "VoiceRecognition");
+                mSTTListener.setNextGuide(guide);
+                mSTT.startListening(intent);
+            }
+        });
     }
 
     public void stopSpeechToText() {

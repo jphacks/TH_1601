@@ -9,6 +9,7 @@ public enum Guide {
     LINENotification,
     ConfirmReply,
     GetAnswerConfirmReply,
+    DecideReply,
     StartReply,
     RepeatReply,
     ConfirmSend,

@@ -22,6 +22,8 @@ public class SpeechToTextListenerImpl implements RecognitionListener {
 
     private Context mContext;
 
+    private Guide nextGuide = Guide.Guide;
+
     public SpeechToTextListenerImpl(Context context, SpeechToTextListener listener) {
         mContext = context;
         mListener = listener;
@@ -93,12 +95,17 @@ public class SpeechToTextListenerImpl implements RecognitionListener {
         }
     }
 
+    // Bundleが新しくなってしまったもので、Guideを受け取れないので、
+    // ListenerImplだが特例でsetメソッド設置
+    public void setNextGuide(Guide guide) {
+        nextGuide = guide;
+    }
+
     @Override
     public void onResults(Bundle bundle) {
         // TODO Resultから一番ちゃんとしたものを選ぶ方法はある？
         ArrayList<String> results = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        Guide guide = (Guide)bundle.get(Guide.Guide.toString());
-        if(mListener != null) mListener.onGetTextFromSpeech(results.get(0), guide);
+        if(mListener != null) mListener.onGetTextFromSpeech(results.get(0), nextGuide);
     }
 
     @Override
