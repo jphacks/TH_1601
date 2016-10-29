@@ -15,16 +15,33 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".LINERegisterActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="smart-walk" android:host="register" />
+
+                <data
+                    android:host="register"
+                    android:scheme="smart-walk" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".LINEFriendRegisterActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="friend"
+                    android:scheme="smart-walk" />
             </intent-filter>
         </activity>
 
@@ -36,17 +53,18 @@
             android:screenOrientation="sensor">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="line.1486135868" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="jp.line.android.sdk.activity.WebLoginActivity"
             android:configChanges="keyboard|orientation"
             android:exported="false"
-            android:screenOrientation="sensor"></activity>
+            android:screenOrientation="sensor" />
 
         <service
             android:name=".LINENotificationService"

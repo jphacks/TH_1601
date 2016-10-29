@@ -18,10 +18,22 @@ import java.util.Map;
  * Created by goto on 2016/10/29.
  */
 
-public class HttpJSONClient extends AsyncTask<Void, Void, String> {
+public class HttpJSONClient extends AsyncTask<Void, Void, HttpJSONClient.ResponseObject> {
+
+    public class ResponseObject {
+        public int code;
+        public String statusMessage;
+        public String content;
+
+        public ResponseObject(int code, String statusMessage, String content) {
+            this.code = code;
+            this.statusMessage = statusMessage;
+            this.content = content;
+        }
+    }
 
     public interface Responded {
-        public void responded(String string);
+        public void responded(int code, String statusMessage, String content);
     }
 
     private URL url;
@@ -39,8 +51,10 @@ public class HttpJSONClient extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected String doInBackground(Void... params) {
+    protected ResponseObject doInBackground(Void... params) {
         StringBuilder sb = new StringBuilder();
+        int code = 500;
+        String statusMessage = "";
         try {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
@@ -52,6 +66,8 @@ public class HttpJSONClient extends AsyncTask<Void, Void, String> {
                  PrintStream ps = new PrintStream(os)) {
                 ps.print(sendData);
             }
+            code = con.getResponseCode();
+            statusMessage = con.getResponseMessage();
             try (InputStreamReader isr = new InputStreamReader(con.getInputStream());
                  BufferedReader br = new BufferedReader(isr)) {
                 String line;
@@ -64,13 +80,13 @@ public class HttpJSONClient extends AsyncTask<Void, Void, String> {
             e.printStackTrace();
             Log.d("HttpJSONClient", "Failed to send json data.");
         }
-        return sb.toString();
+        return new ResponseObject(code, statusMessage, sb.toString());
     }
 
     @Override
-    protected void onPostExecute(String str) {
+    protected void onPostExecute(ResponseObject obj) {
         if(responceCallback != null) {
-            responceCallback.responded(str);
+            responceCallback.responded(obj.code, obj.statusMessage, obj.content);
         }
     }
 }
