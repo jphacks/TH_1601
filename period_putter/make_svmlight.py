@@ -1,12 +1,10 @@
-f = open('SC_vec.dat', 'r')
-fo = open('SC_svmlight.txt', 'w')
+f = open('SC_vec2.dat', 'r')
+fo = open('SC_svmlight2.txt', 'w')
 line = f.readline()[:-1]
 while line:
-	fo.write(str(line[250]) + " ")
-	for i in range(100):
+	fo.write(str(line[200]) + " ")
+	for i in range(199):
 			fo.write(str(i+1) + ":" + line[i] + " ")
-	for i in range(150, 249):
-			fo.write(str(i-50+1) + ":" + line[i] + " ")
-	fo.write(str(200) + ":" + line[249] + "\n")
+	fo.write(str(200) + ":" + line[199] + "\n")
 
 	line = f.readline()[:-1]
