@@ -3,16 +3,10 @@
     package="com.stonedot.todo.smartwalk">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
-    <uses-permission android:name="android.permission.INTENT" />
-
-    <meta-data
-        android:name="jp.line.sdk.ChannelId"
-        android:value="1486135868" />
-    <meta-data
-        android:name="jp.line.sdk.AuthScheme"
-        android:value="line.1486135868" />
+    <uses-permission android:name="android.permission.INTERNET" />
     
     <application
+        android:name="com.stonedot.todo.smartwalk.SmartWalkApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -26,6 +20,7 @@
             </intent-filter>
         </activity>
 
+        <!-- LINE SDK Settings -->
         <activity android:name="jp.line.android.sdk.activity.LineAuthCompleteActivity"
             android:configChanges="keyboard|orientation"
             android:exported="true"
@@ -51,6 +46,13 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+
+        <meta-data
+            android:name="jp.line.sdk.ChannelId"
+            android:value="1486135868" />
+        <meta-data
+            android:name="jp.line.sdk.AuthScheme"
+            android:value="line.1486135868" />
     </application>
 
 </manifest>
