@@ -9,6 +9,7 @@ class CallbackController < ApplicationController
     end
 
     events = line_client.parse_events_from(body)
+    logger.info body
     events.each do |event|
       case event
       when Line::Bot::Event::Message
@@ -54,14 +55,10 @@ class CallbackController < ApplicationController
         case event['source']['type']
         when 'group'
           group_id = event['source']['groupId']
-          group = Group.new
-          group.group_id = group_id
-          group.save
+          group = Group.find_or_create_by group_id: group_id
         when 'room'
           room_id = event['source']['roomId']
-          room = Room.new
-          room.room_id = room_id
-          room.save
+          room = Room.find_or_create_by room_id: room_id
         end
       when Line::Bot::Event::Leave
         # ルーム、グループ一覧から消去
