@@ -7,9 +7,9 @@ class RegisterController < ApplicationController
   def register
     body = request.body.read
     json = JSON.parse(body)
-    user_id = json['id']
+    token = json['token']
     mid = json['mid']
-    user = RegistrationToken.find_by(user_id).user
+    user = RegistrationToken.find_by(token: token).user
     user.mid = mid
     user.save
   end
