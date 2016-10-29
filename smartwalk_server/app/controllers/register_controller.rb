@@ -13,7 +13,7 @@ class RegisterController < ApplicationController
     token = json['token']
     mid = json['mid']
     unless RegistrationToken.find_by(token: token) then
-      return render 'expire'
+      return head :bad_request
     end
     RegistrationToken.transaction do
       reg_token = RegistrationToken.find_by(token: token)
