@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   get 'register/:id', to: 'register#show', format: false
-  post 'register/:id', to: 'register#register', format: false
+  post 'register', to: 'register#register', format: false
 
   post 'message/push', format: false
 
