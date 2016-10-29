@@ -10,13 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161028090157) do
+ActiveRecord::Schema.define(version: 20161029081806) do
 
   create_table "groups", force: :cascade do |t|
     t.string   "group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["group_id"], name: "index_groups_on_group_id", unique: true
+  end
+
+  create_table "registration_tokens", force: :cascade do |t|
+    t.string   "token",      null: false
+    t.integer  "user_id",    null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["token"], name: "index_registration_tokens_on_token", unique: true
   end
 
   create_table "rooms", force: :cascade do |t|
@@ -33,7 +41,9 @@ ActiveRecord::Schema.define(version: 20161028090157) do
     t.text     "status_message"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+    t.string   "mid"
     t.index ["display_name"], name: "index_users_on_display_name"
+    t.index ["mid"], name: "index_users_on_mid", unique: true
     t.index ["user_id"], name: "index_users_on_user_id", unique: true
   end
 

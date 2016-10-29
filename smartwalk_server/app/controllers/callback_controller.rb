@@ -37,6 +37,13 @@ class CallbackController < ApplicationController
         user.picture_url = json['pictureUrl']
         user.status_message = json['statusMessage']
         user.save
+        token = RegistrationToken.generate_token_for(user)
+        url = url_for controller: register, action: show, :id => token
+        message = {
+          type: 'text',
+          text: "以下のURLにアクセスして登録作業を続けてください。/n#{url}"
+        }
+        line_client.reply_message(event['replyToken'], message)
       when Line::Bot::Event::Unfollow
         # ユーザー一覧から消去
         user_id = event['source']['userId']
