@@ -22,13 +22,13 @@ public class SpeechToTextManager {
         mSTT.setRecognitionListener(mSTTListener);
     }
 
-    public void startSpeechToText(final Guide guide) {
+    public void speechToText(final Guide guide) {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH); // ACTION_WEB_SEARCH
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "VoiceRecognition");
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "音声を入力");
                 mSTTListener.setNextGuide(guide);
                 mSTT.startListening(intent);
             }

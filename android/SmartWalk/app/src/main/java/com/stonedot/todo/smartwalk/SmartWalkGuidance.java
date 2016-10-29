@@ -3,8 +3,16 @@ package com.stonedot.todo.smartwalk;
 import android.app.Activity;
 import android.util.Log;
 
-import static com.stonedot.todo.smartwalk.Guide.Guide;
+import static com.stonedot.todo.smartwalk.Guide.ConfirmReply;
+import static com.stonedot.todo.smartwalk.Guide.ConfirmSend;
+import static com.stonedot.todo.smartwalk.Guide.DecideReply;
+import static com.stonedot.todo.smartwalk.Guide.Finish;
+import static com.stonedot.todo.smartwalk.Guide.GetAnswerConfirmReply;
+import static com.stonedot.todo.smartwalk.Guide.GetAnswerConfirmSend;
+import static com.stonedot.todo.smartwalk.Guide.RepeatReply;
+import static com.stonedot.todo.smartwalk.Guide.Reserve;
 import static com.stonedot.todo.smartwalk.Guide.Send;
+import static com.stonedot.todo.smartwalk.Guide.StartReply;
 
 /**
  * Created by komatsu on 2016/10/29.
@@ -16,10 +24,25 @@ public class SmartWalkGuidance {
     private TextToSpeechManager mTTS;
     private SpeechToTextManager mSTT;
 
+    private String lastSender = "";
+    private String lastContent = "";
+
     public SmartWalkGuidance(Activity activity, TextToSpeechManager tts, SpeechToTextManager sst) {
         mActivity = activity;
         mTTS = tts;
         mSTT = sst;
+    }
+
+    public void setLastSender(String name) {
+        lastSender = name;
+    }
+
+    public void setLastContent(String content) {
+        lastContent = content;
+    }
+
+    private void reserve() {
+        // TODO 保留措置
     }
 
     // TODO メッセージの割り込み対策
@@ -28,52 +51,60 @@ public class SmartWalkGuidance {
         Log.d("nextGuide", guide.toString());
         switch (guide) {
             case LINENotification:
-                Log.d("LINENotification", text);
-                mTTS.speechText(text, Guide.ConfirmReply);
+                mTTS.textToSpeech(text, ConfirmReply);
                 break;
 
             case ConfirmReply:
-                Log.d("ConfirmReply", "");
-                mTTS.speechText("今すぐ返信しますか? 返信するには、「はい」と言ってください。", Guide.GetAnswerConfirmReply);
+                mTTS.textToSpeech("「はい」と言うと返信します。", GetAnswerConfirmReply);
                 break;
 
             case GetAnswerConfirmReply:
-                mSTT.startSpeechToText(Guide.DecideReply);
+                mSTT.speechToText(DecideReply);
                 break;
 
             case DecideReply:
-                Log.d("DecideReply", text);
-                if(!text.equals("はい")) break; // TODO 返信拒否
-                mTTS.speechText("メッセージを入力してください。", Guide.StartReply);
+                if(!text.equals("はい")) {
+                    mTTS.textToSpeech("保留されます。", Reserve);
+                    break;
+                }
+                mTTS.textToSpeech("メッセージを入力してください。", StartReply);
                 break;
 
             case StartReply:
-                mSTT.startSpeechToText(Guide.RepeatReply);
+                mSTT.speechToText(RepeatReply);
                 break;
 
             case RepeatReply:
-                Log.d("RepeatReply", text);
-                if(text == null || text == "") break; // TODO 返信メッセージ取得失敗
+                if(text == null || text == "") {
+                    mTTS.textToSpeech("メッセージの取得に失敗しました。", ConfirmReply);
+                    break;
+                }
                 String repeatMessage = "返信メッセージは、" + text + "、です。";
-                mTTS.speechText(repeatMessage, Guide.ConfirmSend);
+                mTTS.textToSpeech(repeatMessage, ConfirmSend);
                 break;
 
             case ConfirmSend:
-                mTTS.speechText("返信しますか？", Guide.GetAnswerConfirmSend);
+                mTTS.textToSpeech("「はい」と言うと送信します。", GetAnswerConfirmSend);
                 break;
 
             case GetAnswerConfirmSend:
-                mSTT.startSpeechToText(Send);
+                mSTT.speechToText(Send);
                 break;
 
             case Send:
-                Log.d("Send", text);
-                if(!text.equals("はい")) break; // TODO 送信拒否、ConfirmReplyへ
+                if(!text.equals("はい")) {
+                    mTTS.textToSpeech("メッセージを再入力してください。", StartReply);
+                    break;
+                }
                 // TODO メッセージ送信
-                mTTS.speechText("メッセージを送信しました", Guide.Finish);
+                if(false) break;
+                mTTS.textToSpeech("メッセージを送信しました", Finish);
                 break;
 
-            case Finish:
+            case Finish: break;
+
+            case Reserve:
+                reserve();
                 break;
 
             default: break;
