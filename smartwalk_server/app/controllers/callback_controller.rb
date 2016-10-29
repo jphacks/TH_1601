@@ -37,12 +37,15 @@ class CallbackController < ApplicationController
         user.display_name = json['displayName']
         user.picture_url = json['pictureUrl']
         user.status_message = json['statusMessage']
+        user.friend_token = User.generate_random_string
         user.save
         token = RegistrationToken.generate_token_for(user)
         url = url_for controller: 'register', action: 'show', :id => token
         message = {
           type: 'text',
-          text: "以下のURLにアクセスして登録作業を続けてください。\n#{url}"
+          text: ["以下のURLにアクセスすると登録作業をすることができます。\n#{url}",
+                 "あなたの友だちには以下のURLを送ってください。",
+                 user.friend_url]
         }
         line_client.reply_message(event['replyToken'], message)
       when Line::Bot::Event::Unfollow

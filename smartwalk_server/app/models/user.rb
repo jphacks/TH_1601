@@ -6,6 +6,22 @@ class User < ApplicationRecord
   has_many :registration_tokens, dependent: :destroy
   has_and_belongs_to_many :groups
   has_and_belongs_to_many :rooms
+  has_and_belongs_to_many :friends, class_name: "User", join_table: :friendships,
+                          foreign_key: 'user_id', association_foreign_key: :friend_user_id
+
+  def self.generate_random_string
+    domain =  [('a'..'z'), ('A'..'Z'), ('0'..'9')].map{|i| i.to_a}.flatten
+    (0...24).map{domain.to_a[rand(domain.length)] }.join
+  end
+
+  def self.make_friend(friend1, friend2)
+    friend1.friends << friend2
+    friend2.friends << friend1
+  end
+
+  def friend_url()
+    url_for controller: 'users', action: 'friend', id: friend_token
+  end
 
   def search_user(sender, displayName)
     User.find_by(user_id: sender)
