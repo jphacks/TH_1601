@@ -24,7 +24,7 @@ class User < ApplicationRecord
         user2.save!
       end
       head :ok
-    rescue e
+    rescue
       head :bad_request
     end
   end
