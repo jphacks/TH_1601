@@ -43,7 +43,7 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
         else Toast.makeText(mContext, "言語選択エラー", Toast.LENGTH_SHORT).show();
     }
 
-    public void speechText(String text, Guide guide) {
+    public void textToSpeech(String text, Guide guide) {
         if (mTTS == null || text.length() <= 0 || !mInitCompletedFlag) return;
         HashMap<String, String> parameter = new HashMap<String, String>();
         parameter.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, guide.toString());

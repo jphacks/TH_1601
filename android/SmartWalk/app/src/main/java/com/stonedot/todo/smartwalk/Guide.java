@@ -15,5 +15,6 @@ public enum Guide {
     ConfirmSend,
     GetAnswerConfirmSend,
     Send,
-    Finish
+    Finish,
+    Reserve
 }

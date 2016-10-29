@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements
         mSoundRecognizeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSTT.startSpeechToText(null);
+                mSTT.speechToText(null);
             }
         });
     }
@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements
         if(text.equals(lastText)) return;
         lastText = text;
 
+        mGuidance.setLastSender(sender);
+        mGuidance.setLastContent(content);
         mGuidance.nextGuide(Guide.LINENotification, text);
         mLINEFragment.displayText(sender, content);
     }
