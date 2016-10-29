@@ -92,6 +92,9 @@ public class LINEFragment extends Fragment {
                     try(FileOutputStream fos = getActivity().openFileOutput(FILENAME_LINE_ID, Context.MODE_PRIVATE)) {
                         fos.write(profile.mid.getBytes());
                         Log.d("LineFragment", "Line ID: " + profile.mid.toString());
+
+                        LINEFriendDialogFragment dialog = new LINEFriendDialogFragment();
+                        dialog.show(getFragmentManager(), "line_dialog");
                     } catch (IOException e) {
                         e.printStackTrace();
                         Log.d("LineFragment", "Saving LINE ID failed.");
