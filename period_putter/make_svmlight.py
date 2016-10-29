@@ -1,5 +1,5 @@
-f = open('SC_vec2.dat', 'r')
-fo = open('SC_svmlight2.txt', 'w')
+f = open('SC_vec3.dat', 'r')
+fo = open('SC_svmlight3.txt', 'w')
 line = f.readline()[:-1]
 while line:
 	fo.write(str(line[200]) + " ")

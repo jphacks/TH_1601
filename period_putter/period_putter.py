@@ -16,7 +16,7 @@ import json
 class Period_putter():
 
 	def __init__(self):
-		self.clf = joblib.load('clf2.pkl')
+		self.clf = joblib.load('clf3.pkl')
 		self.all_pos_list = ['名詞', '名詞接尾辞', '冠名詞', '英語接尾辞', '動詞語幹', '動詞活用語尾', '動詞接尾辞', '冠動詞', '補助名詞', '形容詞語幹', '形容詞接尾辞', '冠形容詞', '連体詞', '連用詞', '接続詞', '独立詞', '接続接尾辞', '判定詞', '格助詞', '引用助詞', '連用助詞', '終助詞', '間投詞', '括弧', '句点', '読点', 'Symbol', 'Year', 'Month', 'Day', 'YearMonth', 'MonthDay', 'Hour', 'Minute', 'Second', 'HourMinute', 'MinuteSecond', 'PreHour', 'PostHour', 'Number', '助数詞', '助助数詞', '冠数詞', 'Alphabet', 'Kana', 'Katakana', 'Kanji', 'Roman', 'Undef']
 
 	#ベクトルを2値ベクトルに変換
@@ -92,10 +92,10 @@ class Period_putter():
 		ret_string = ""
 		len_form = len(form_list)
 		for i, c in enumerate(classes):
-			if i < len_form:
-				ret_string += form_list[i]
 			if c == 1.0:
 				ret_string += "。"
+			if i < len_form:
+				ret_string += form_list[i]
 		return ret_string
 
 
@@ -110,4 +110,6 @@ class Period_putter():
 		return string_with_period
 
 pp = Period_putter()
-print(pp.put_period("今日のバイト，インフルエンザで無理っぽい代わりに出れる"))
+print(pp.put_period("分かったお大事にね"))
+#長い台詞のテスト用
+print(pp.put_period("寿くんの言ってる事は一つも分かんないよ寿くんがいいって言ってるもの何がいいのか分かんないよ分かんない私には分かんないのブラッティって何がカッコいいの血なんてイヤだよ痛いだけだよ黒のどこがカッコいいのクレイジーのどこがいいのか分かんない罪深いってなんなの罪があるののなのがいいの犯罪者がカッコいいのそもそも混沌てなにカオスだからなんなの闇ってなに暗ければいいの正義と悪だとなんで悪がいいの何で悪いほうがいいの悪いから悪じゃないの右腕がうずくと何でカッコいいの自分の力が制御できない感じがたまらないって何それただの間抜けな人じゃんちゃんと制御できるほうがカッコいいよ立派だよ普段は力を隠していると何が凄いのそんなのタダの手抜きだよ"))
