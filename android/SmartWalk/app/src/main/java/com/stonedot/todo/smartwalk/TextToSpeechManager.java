@@ -2,6 +2,7 @@ package com.stonedot.todo.smartwalk;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.widget.Toast;
 
 import java.util.Locale;
@@ -13,11 +14,13 @@ import java.util.Locale;
 public class TextToSpeechManager implements TextToSpeech.OnInitListener {
 
     private Context mContext;
+    private UtteranceProgressListener mFinishListener;
     private TextToSpeech mTTS;
     private boolean mInitCompletedFlag = false;
 
-    public TextToSpeechManager(Context context) {
+    public TextToSpeechManager(Context context, UtteranceProgressListener finishListener) {
         mContext = context;
+        mFinishListener = finishListener;
         mTTS = new TextToSpeech(context, this);
     }
 
@@ -28,6 +31,11 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
             Toast.makeText(mContext, "初期化エラー", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        if(mFinishListener != null) {
+            mTTS.setOnUtteranceProgressListener(mFinishListener);
+        }
+
         Locale locale = Locale.JAPANESE;
         if (mTTS.isLanguageAvailable(locale) >= TextToSpeech.LANG_AVAILABLE) {
             mTTS.setLanguage(locale);
@@ -39,11 +47,23 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
     public void speechText(String text) {
         if (mTTS == null || text.length() <= 0 || !mInitCompletedFlag) return;
         if (mTTS.isSpeaking()) mTTS.stop();
-        mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+
+        // TODO 連続でメッセージが来た時の対処(キューに突っ込む)
+        mTTS.speak(removePictureChars(text), TextToSpeech.QUEUE_FLUSH, null);
     }
 
     // TODO どこでシャットダウンしようか…
     public void shutdown() {
         if(mTTS != null) mTTS.shutdown();
+    }
+
+    // TODO LINEで動かないぞ
+    private String removePictureChars(String text) {
+        StringBuffer buffer = new StringBuffer();
+        for(char c : text.toCharArray()) {
+            if(Character.UnicodeBlock.of(c) == Character.UnicodeBlock.PRIVATE_USE_AREA) continue;
+            buffer.append(c);
+        }
+        return buffer.toString();
     }
 }

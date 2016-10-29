@@ -11,12 +11,19 @@
 
     <LinearLayout
         android:id="@+id/main_screen"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+       <Button
+           android:id="@+id/sound_recognize"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="音声認識"/>
+
         <fragment
             android:id="@+id/fragment_line_settings"
-            android:name="com.stonedot.todo.smartwalk.LINESettingsFragment"
+            android:name="com.stonedot.todo.smartwalk.LINEFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_line_settings">
