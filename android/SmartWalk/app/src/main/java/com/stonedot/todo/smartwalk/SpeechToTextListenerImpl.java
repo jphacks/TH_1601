@@ -12,17 +12,17 @@ import java.util.ArrayList;
  * Created by komatsu on 2016/10/29.
  */
 
-public class SpeechRecognitionListenerImpl implements RecognitionListener {
+public class SpeechToTextListenerImpl implements RecognitionListener {
 
-    public interface SpeechListener{
-        void onGetSpeechToText(String text);
-        void onGetSpeechToTextFailed();
+    public interface SpeechToTextListener {
+        void onGetTextFromSpeech(String text);
+        void onGetTextFromSpeechFailed();
     }
-    private SpeechListener mListener;
+    private SpeechToTextListener mListener;
 
     private Context mContext;
 
-    public SpeechRecognitionListenerImpl(Context context, SpeechListener listener) {
+    public SpeechToTextListenerImpl(Context context, SpeechToTextListener listener) {
         mContext = context;
         mListener = listener;
     }
@@ -75,7 +75,7 @@ public class SpeechRecognitionListenerImpl implements RecognitionListener {
             case SpeechRecognizer.ERROR_NO_MATCH:
                 // 音声認識結果無し
                 Toast.makeText(mContext, "音声を認識できませんでした。", Toast.LENGTH_SHORT).show();
-                if(mListener != null) mListener.onGetSpeechToTextFailed();
+                if(mListener != null) mListener.onGetTextFromSpeechFailed();
                 break;
             case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
                 Toast.makeText(mContext, "音声認識プログラムが使用中です", Toast.LENGTH_SHORT).show();
@@ -86,7 +86,7 @@ public class SpeechRecognitionListenerImpl implements RecognitionListener {
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
                 // 音声入力無し
                 Toast.makeText(mContext, "音声入力がありませんでした。", Toast.LENGTH_SHORT).show();
-                if(mListener != null) mListener.onGetSpeechToTextFailed();
+                if(mListener != null) mListener.onGetTextFromSpeechFailed();
                 break;
             default:
                 break;
@@ -98,7 +98,7 @@ public class SpeechRecognitionListenerImpl implements RecognitionListener {
         // TODO Resultから一番ちゃんとしたものを選ぶ方法はある？
         ArrayList<String> results = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         Toast.makeText(mContext, results.get(0), Toast.LENGTH_SHORT).show();
-        if(mListener != null) mListener.onGetSpeechToText(results.get(0));
+        if(mListener != null) mListener.onGetTextFromSpeech(results.get(0));
     }
 
     @Override

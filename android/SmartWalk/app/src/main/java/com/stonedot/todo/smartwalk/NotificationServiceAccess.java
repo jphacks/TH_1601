@@ -7,6 +7,7 @@ import android.provider.Settings;
 
 /**
  * Created by komatsu on 2016/10/23.
+ * このアプリで通知を受け取れるように設定画面を開くためのクラス
  */
 
 public class NotificationServiceAccess {
