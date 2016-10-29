@@ -9,6 +9,7 @@ class CallbackController < ApplicationController
     end
 
     events = line_client.parse_events_from(body)
+    logger.info body
     events.each do |event|
       case event
       when Line::Bot::Event::Message
@@ -36,14 +37,21 @@ class CallbackController < ApplicationController
         user.display_name = json['displayName']
         user.picture_url = json['pictureUrl']
         user.status_message = json['statusMessage']
+        user.friend_token = User.generate_random_string
         user.save
         token = RegistrationToken.generate_token_for(user)
         url = url_for controller: 'register', action: 'show', :id => token
-        message = {
-          type: 'text',
-          text: "以下のURLにアクセスして登録作業を続けてください。\n#{url}"
-        }
-        line_client.reply_message(event['replyToken'], message)
+        messages = [{
+                      type: 'text',
+                      text: "以下のURLにアクセスすると登録作業をすることができます。\n#{url}"
+                    }, {
+                      type: 'text',
+                      text: "あなたの友だちには以下のURLを送ってください。"
+                    }, {
+                      type: 'text',
+                      text:  user.friend_url
+                    }]
+        line_client.reply_message(event['replyToken'], messages)
       when Line::Bot::Event::Unfollow
         # ユーザー一覧から消去
         user_id = event['source']['userId']
@@ -54,14 +62,10 @@ class CallbackController < ApplicationController
         case event['source']['type']
         when 'group'
           group_id = event['source']['groupId']
-          group = Group.new
-          group.group_id = group_id
-          group.save
+          group = Group.find_or_create_by group_id: group_id
         when 'room'
           room_id = event['source']['roomId']
-          room = Room.new
-          room.room_id = room_id
-          room.save
+          room = Room.find_or_create_by room_id: room_id
         end
       when Line::Bot::Event::Leave
         # ルーム、グループ一覧から消去

@@ -2,8 +2,11 @@ class MessageController < ApplicationController
   def push
     body = request.body.read
     json = JSON.parse(body)
-    # sender = json['sender']
+    sender = json['sender']
+    display_name = json['displayName']
     receiver = json['receiver']
+    unless receiver then
+    end
     message = {
       type: 'text',
       text: json['message']

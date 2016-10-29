@@ -10,13 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161029081806) do
+ActiveRecord::Schema.define(version: 20161029190945) do
+
+  create_table "friendships", id: false, force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "friend_user_id"
+    t.index ["friend_user_id", "user_id"], name: "index_friendships_on_friend_user_id_and_user_id", unique: true
+    t.index ["user_id", "friend_user_id"], name: "index_friendships_on_user_id_and_friend_user_id", unique: true
+  end
 
   create_table "groups", force: :cascade do |t|
     t.string   "group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["group_id"], name: "index_groups_on_group_id", unique: true
+  end
+
+  create_table "groups_users", id: false, force: :cascade do |t|
+    t.integer "group_id", null: false
+    t.integer "user_id",  null: false
+    t.index ["user_id", "group_id"], name: "index_groups_users_on_user_id_and_group_id", unique: true
   end
 
   create_table "registration_tokens", force: :cascade do |t|
@@ -35,6 +48,12 @@ ActiveRecord::Schema.define(version: 20161029081806) do
     t.index ["room_id"], name: "index_rooms_on_room_id", unique: true
   end
 
+  create_table "rooms_users", id: false, force: :cascade do |t|
+    t.integer "room_id", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "room_id"], name: "index_rooms_users_on_user_id_and_room_id", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "user_id",        null: false
     t.text     "display_name"
@@ -43,7 +62,9 @@ ActiveRecord::Schema.define(version: 20161029081806) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.string   "mid"
+    t.string   "friend_token"
     t.index ["display_name"], name: "index_users_on_display_name"
+    t.index ["friend_token"], name: "index_users_on_friend_token", unique: true
     t.index ["mid"], name: "index_users_on_mid", unique: true
     t.index ["user_id"], name: "index_users_on_user_id", unique: true
   end
