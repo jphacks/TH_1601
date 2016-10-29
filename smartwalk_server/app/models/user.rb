@@ -2,6 +2,7 @@ class User < ApplicationRecord
   validates :user_id, presence: true
   validates :user_id, uniqueness: true
   validates :display_name, presence: true
+  validate :check_same_reference
 
   has_many :registration_tokens, dependent: :destroy
   has_and_belongs_to_many :groups
@@ -17,6 +18,10 @@ class User < ApplicationRecord
   def self.make_friend(friend1, friend2)
     friend1.friends << friend2
     friend2.friends << friend1
+  end
+
+  def check_same_reference
+    errors.add(:friend, "can't be the same reference") if id == friend.id
   end
 
   def friend_url()
