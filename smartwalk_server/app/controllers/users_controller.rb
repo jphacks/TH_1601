@@ -3,7 +3,7 @@ class UsersController < ApplicationController
     friend_token = params[:id]
     user = User.find_by(friend_token: friend_token)
     @display_name = user.display_name
-    @link_target = user.friend_url
+    @link_target = user.friend_api_url
   end
 
   def friend_add

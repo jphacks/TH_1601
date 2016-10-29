@@ -24,6 +24,10 @@ class User < ApplicationRecord
     routes.url_for host: 'smartwalk.stonedot.com', controller: 'users', action: 'friend', id: friend_token
   end
 
+  def friend_api_url()
+    "smart-walk://friend/" + friend_token
+  end
+
   def search_user(sender, displayName)
     User.find_by(user_id: sender)
   end
