@@ -1,2 +1,5 @@
-<h1>Users#friend</h1>
-<p>Find me in app/views/users/friend.html.erb</p>
+<h1>友だち登録</h1>
+<p>
+  <%= @display_name %>と友だちであることをSmartWalkに知らせる場合は以下のリンクをクリックしてください。
+</p>
+<%= link_to(@display_name + "と友達です", @link_target)%>

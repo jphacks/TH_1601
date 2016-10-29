@@ -1,7 +1,9 @@
 class UsersController < ApplicationController
   def friend
     friend_token = params[:id]
-    @target_link = User.find_by(friend_token: friend_token).friend_url
+    user = User.find_by(friend_token: friend_token)
+    @display_name = user.display_name
+    @link_target = user.friend_url
   end
 
   def friend_add
