@@ -41,13 +41,17 @@ class CallbackController < ApplicationController
         user.save
         token = RegistrationToken.generate_token_for(user)
         url = url_for controller: 'register', action: 'show', :id => token
-        message = {
-          type: 'text',
-          text: ["以下のURLにアクセスすると登録作業をすることができます。\n#{url}",
-                 "あなたの友だちには以下のURLを送ってください。",
-                 user.friend_url]
-        }
-        line_client.reply_message(event['replyToken'], message)
+        messages = [{
+                      type: 'text',
+                      text: "以下のURLにアクセスすると登録作業をすることができます。\n#{url}"
+                    }, {
+                      type: 'text',
+                      text: "あなたの友だちには以下のURLを送ってください。"
+                    }, {
+                      type: 'text',
+                      text:  user.friend_url
+                    }]
+        line_client.reply_message(event['replyToken'], messages)
       when Line::Bot::Event::Unfollow
         # ユーザー一覧から消去
         user_id = event['source']['userId']
