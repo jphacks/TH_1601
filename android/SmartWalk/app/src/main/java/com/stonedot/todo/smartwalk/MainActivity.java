@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import jp.line.android.sdk.LineSdkContextManager;
+
 public class MainActivity extends AppCompatActivity implements
         SpeechToTextListenerImpl.SpeechToTextListener,
         TextToSpeech.OnUtteranceCompletedListener,
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements
         mLINEReceiver = new LINEBroadcastReceiver(this, this);
 
         // LineSDK を初期化
-        // LineSdkContextManager.initialize(this);
+        LineSdkContextManager.initialize(this);
 
         speechTest();
     }
@@ -57,7 +59,12 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onUtteranceCompleted(String s) {
         // TODO 音声出力完了
-        Toast.makeText(this, "音声出力完了", Toast.LENGTH_SHORT).show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getBaseContext(), "音声出力完了", Toast.LENGTH_SHORT).show();
+            }
+        });
         mSTT.startSpeechToText();
     }
 

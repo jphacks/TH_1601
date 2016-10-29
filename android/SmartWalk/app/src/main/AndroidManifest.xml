@@ -3,7 +3,7 @@
     package="com.stonedot.todo.smartwalk">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
-    <uses-permission android:name="android.permission.INTENT" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <meta-data
         android:name="jp.line.sdk.ChannelId"

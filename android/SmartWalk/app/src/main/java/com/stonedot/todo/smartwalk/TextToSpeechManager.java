@@ -1,7 +1,6 @@
 package com.stonedot.todo.smartwalk;
 
 import android.content.Context;
-import android.media.AudioManager;
 import android.speech.tts.TextToSpeech;
 import android.widget.Toast;
 
@@ -48,9 +47,8 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
     public void speechText(String text) {
         if (mTTS == null || text.length() <= 0 || !mInitCompletedFlag) return;
         HashMap<String, String> myHashAlarm = new HashMap<String, String>();
-        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_ALARM));
-        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "SOME MESSAGE");
-        mTTS.speak(removePictureChars(text), TextToSpeech.QUEUE_ADD, myHashAlarm);
+        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "MESSAGE");
+        mTTS.speak(removePictureChars(text), TextToSpeech.QUEUE_FLUSH, myHashAlarm);
     }
 
     // TODO どこでシャットダウンしようか…
