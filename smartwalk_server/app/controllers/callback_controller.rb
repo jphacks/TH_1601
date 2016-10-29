@@ -1,5 +1,21 @@
 # coding: utf-8
 class CallbackController < ApplicationController
+  def generate_message_content(user)
+    token = RegistrationToken.generate_token_for(user)
+    url = url_for controller: 'register', action: 'show', :id => token
+    return [{
+              type: 'text',
+              text: "以下のURLにアクセスすると登録作業をすることができます。\n#{url}"
+            }, {
+              type: 'text',
+              text: "あなたの友だちには以下のURLを送ってください。"
+            }, {
+              type: 'text',
+              text:  user.friend_url
+            }]
+
+  end
+
   def callback
     body = request.body.string
     signature = request.env['HTTP_X_LINE_SIGNATURE']
@@ -16,11 +32,10 @@ class CallbackController < ApplicationController
         # メッセージが届いた時の実験的挙動
         case event.type
         when Line::Bot::Event::MessageType::Text
-          message = {
-            type: 'text',
-            text: event.message['text']
-          }
-          line_client.reply_message(event['replyToken'], message)
+          user = User.find_by(user_id: event['source']['userId'])
+          if event['source']['type'] == 'user' then
+            line_client.reply_message(event['replyToken'], generate_message_content(user))
+          end
         when Line::Bot::Event::MessageType::Image,
              Line::Bot::Event::MessageType::Video
           response = line_client.get_message_content(event.message['id'])
@@ -39,19 +54,7 @@ class CallbackController < ApplicationController
         user.status_message = json['statusMessage']
         user.friend_token = User.generate_random_string
         user.save
-        token = RegistrationToken.generate_token_for(user)
-        url = url_for controller: 'register', action: 'show', :id => token
-        messages = [{
-                      type: 'text',
-                      text: "以下のURLにアクセスすると登録作業をすることができます。\n#{url}"
-                    }, {
-                      type: 'text',
-                      text: "あなたの友だちには以下のURLを送ってください。"
-                    }, {
-                      type: 'text',
-                      text:  user.friend_url
-                    }]
-        line_client.reply_message(event['replyToken'], messages)
+        line_client.reply_message(event['replyToken'], generate_message_content(user))
       when Line::Bot::Event::Unfollow
         # ユーザー一覧から消去
         user_id = event['source']['userId']
