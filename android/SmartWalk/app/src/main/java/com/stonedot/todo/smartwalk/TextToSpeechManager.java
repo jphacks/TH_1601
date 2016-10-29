@@ -2,6 +2,7 @@ package com.stonedot.todo.smartwalk;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.HashMap;
@@ -47,6 +48,7 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
         if (mTTS == null || text.length() <= 0 || !mInitCompletedFlag) return;
         HashMap<String, String> parameter = new HashMap<String, String>();
         parameter.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, guide.toString());
+        Log.d("TextToSpeechManager", "TextToSpeech.getMaxSpeechInputLength():" + TextToSpeech.getMaxSpeechInputLength());
         mTTS.speak(removePictureChars(text), TextToSpeech.QUEUE_ADD, parameter);
     }
 
@@ -58,6 +60,7 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
 
     // TODO LINEで動かないぞ
     private String removePictureChars(String text) {
+        Log.d("TextToSpeechManager", text);
         StringBuffer buffer = new StringBuffer();
         for(char c : text.toCharArray()) {
             if(Character.UnicodeBlock.of(c) == Character.UnicodeBlock.PRIVATE_USE_AREA) continue;

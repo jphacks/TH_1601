@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onGetTextFromSpeechFailed() {
-        Toast.makeText(this, "音声入力なし", Toast.LENGTH_SHORT).show();
+    public void onGetTextFromSpeechFailed(Guide guide) {
+        mGuidance.nextGuide(guide, "");
     }
 
     @Override
