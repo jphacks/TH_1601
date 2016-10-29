@@ -17,7 +17,17 @@ class Period_putter():
 
 	def __init__(self):
 		self.clf = joblib.load('clf3.pkl')
-		self.all_pos_list = ['名詞', '名詞接尾辞', '冠名詞', '英語接尾辞', '動詞語幹', '動詞活用語尾', '動詞接尾辞', '冠動詞', '補助名詞', '形容詞語幹', '形容詞接尾辞', '冠形容詞', '連体詞', '連用詞', '接続詞', '独立詞', '接続接尾辞', '判定詞', '格助詞', '引用助詞', '連用助詞', '終助詞', '間投詞', '括弧', '句点', '読点', 'Symbol', 'Year', 'Month', 'Day', 'YearMonth', 'MonthDay', 'Hour', 'Minute', 'Second', 'HourMinute', 'MinuteSecond', 'PreHour', 'PostHour', 'Number', '助数詞', '助助数詞', '冠数詞', 'Alphabet', 'Kana', 'Katakana', 'Kanji', 'Roman', 'Undef']
+		self.all_pos_list = ['名詞', '名詞接尾辞', '冠名詞', '英語接尾辞', '動詞語幹', 
+			'動詞活用語尾', '動詞接尾辞', '冠動詞', '補助名詞', '形容詞語幹', 
+			'形容詞接尾辞', '冠形容詞', '連体詞', '連用詞', '接続詞',
+			 '独立詞', '接続接尾辞', '判定詞', '格助詞', '引用助詞',
+			  '連用助詞', '終助詞', '間投詞', '括弧', '句点',
+			   '読点', 'Symbol', 'Year', 'Month', 'Day',
+			    'YearMonth', 'MonthDay', 'Hour', 'Minute', 'Second',
+			     'HourMinute', 'MinuteSecond', 'PreHour', 'PostHour', 'Number',
+			      '助数詞', '助助数詞', '冠数詞', 'Alphabet', 'Kana',
+			       'Katakana', 'Kanji', 'Roman', 'Undef']
+		self.pos_list = []
 
 	#ベクトルを2値ベクトルに変換
 	def to_binary_vec(self, vec_dec):
@@ -48,7 +58,7 @@ class Period_putter():
 		for i in range(-1, n):
 			vec_dec[0] = vec_dec[1]
 			if i > -1:
-				vec_dec[1] = pos_list[i] if vec_dec[2] == -1 else vec_dec[2]
+				vec_dec[1] = spos_list[i] if vec_dec[2] == -1 else vec_dec[2]
 			if i <= 0:
 				vec_dec[2] = pos_list[i+1]
 			elif i > n-2 or vec_dec[3] == -1:
@@ -57,6 +67,7 @@ class Period_putter():
 				vec_dec[2] = vec_dec[3]
 			vec_dec[3] = pos_list[i+2] if i < n-2 else -1
 			vecs.append(self.to_binary_vec(vec_dec))
+			self.pos_list = pos_list
 		return vecs
 
 
@@ -92,10 +103,12 @@ class Period_putter():
 		ret_string = ""
 		len_form = len(form_list)
 		for i, c in enumerate(classes):
-			if i != 0 and c == 1.0:
+			if i != 0 and (c == 1.0 or self.pos_list[i-1] == "終助詞"):
 				ret_string += "。"
 			if i < len_form:
 				ret_string += form_list[i]
+				if self.pos_list[i] in ["接続詞", "独立詞", "間投詞"]:
+					ret_string += "、"
 		return ret_string
 
 
@@ -112,5 +125,7 @@ class Period_putter():
 pp = Period_putter()
 #現段階ではインフルエンザが抜けると区切れなくなる
 print(pp.put_period("入れるよお大事にね"))
+print(pp.put_period("了解しました私もそちらに向かいます"))
+print(pp.put_period("こんにちは君は可愛いねしかし凶暴だ"))
 #長い台詞のテスト用
 print(pp.put_period("寿くんの言ってる事は一つも分かんないよ寿くんがいいって言ってるもの何がいいのか分かんないよ分かんない私には分かんないのブラッティって何がカッコいいの血なんてイヤだよ痛いだけだよ黒のどこがカッコいいのクレイジーのどこがいいのか分かんない罪深いってなんなの罪があるののなのがいいの犯罪者がカッコいいのそもそも混沌てなにカオスだからなんなの闇ってなに暗ければいいの正義と悪だとなんで悪がいいの何で悪いほうがいいの悪いから悪じゃないの右腕がうずくと何でカッコいいの自分の力が制御できない感じがたまらないって何それただの間抜けな人じゃんちゃんと制御できるほうがカッコいいよ立派だよ普段は力を隠していると何が凄いのそんなのタダの手抜きだよ"))
