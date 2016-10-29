@@ -1,6 +1,6 @@
-f = open('SC_vec3.dat', 'r')
-fo = open('SC_svmlight3.txt', 'w')
-line = f.readline()[:-1]
+f = open('SC_LINE_vec.dat', 'r')
+fo = open('SC_LINE_svmlight.txt', 'w')
+line = f.readline()
 while line:
 	fo.write(str(line[200]) + " ")
 	for i in range(199):

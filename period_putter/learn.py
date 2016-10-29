@@ -25,12 +25,12 @@ def grid_search(train_features, train_labels):
 x,y = load_svmlight_file('SC_svmlight3.txt')
 x = x.toarray()
 
-#clf = SVC(C=1, cache_size=200, class_weight=None, coef0=0.0,
-#  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
-#  max_iter=-1, probability=False, random_state=None, shrinking=True,
-#  tol=0.001, verbose=False)
+clf = SVC(C=1, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='linear',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
 
-clf = joblib.load('clf3.pkl')
+#clf = joblib.load('clf3.pkl')
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
 #grid_search(x_train, y_train)
@@ -38,4 +38,4 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_
 clf.fit(x_train, y_train)
 print(clf.score(x_test, y_test))
 
-#joblib.dump(clf, 'clf3.pkl')
+joblib.dump(clf, 'clf3.pkl')

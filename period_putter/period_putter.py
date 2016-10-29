@@ -9,7 +9,7 @@ from sklearn.svm import SVC
 from sklearn.externals import joblib
 import numpy as np
 
-#
+#形態素解析APIの使用
 import urllib.request
 import json
 
@@ -92,7 +92,7 @@ class Period_putter():
 		ret_string = ""
 		len_form = len(form_list)
 		for i, c in enumerate(classes):
-			if c == 1.0:
+			if i != 0 and c == 1.0:
 				ret_string += "。"
 			if i < len_form:
 				ret_string += form_list[i]
@@ -110,6 +110,7 @@ class Period_putter():
 		return string_with_period
 
 pp = Period_putter()
-print(pp.put_period("分かったお大事にね"))
+#現段階ではインフルエンザが抜けると区切れなくなる
+print(pp.put_period("入れるよお大事にね"))
 #長い台詞のテスト用
 print(pp.put_period("寿くんの言ってる事は一つも分かんないよ寿くんがいいって言ってるもの何がいいのか分かんないよ分かんない私には分かんないのブラッティって何がカッコいいの血なんてイヤだよ痛いだけだよ黒のどこがカッコいいのクレイジーのどこがいいのか分かんない罪深いってなんなの罪があるののなのがいいの犯罪者がカッコいいのそもそも混沌てなにカオスだからなんなの闇ってなに暗ければいいの正義と悪だとなんで悪がいいの何で悪いほうがいいの悪いから悪じゃないの右腕がうずくと何でカッコいいの自分の力が制御できない感じがたまらないって何それただの間抜けな人じゃんちゃんと制御できるほうがカッコいいよ立派だよ普段は力を隠していると何が凄いのそんなのタダの手抜きだよ"))
