@@ -13,6 +13,9 @@ class UsersController < ApplicationController
     mid = json['mid']
     user1 = User.find_by(friend_token: friend_token)
     user2 = User.find_by(mid: mid)
+    if user1 == user2 or user1.friends.exists?(id: user2.id) then
+      return head 204
+    end
     head (User.make_friend(user1, user2) ? :ok : :bad_request)
   end
 end
