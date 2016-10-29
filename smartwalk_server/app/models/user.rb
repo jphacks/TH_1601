@@ -2,7 +2,6 @@ class User < ApplicationRecord
   validates :user_id, presence: true
   validates :user_id, uniqueness: true
   validates :display_name, presence: true
-  validate :check_same_reference
 
   has_many :registration_tokens, dependent: :destroy
   has_and_belongs_to_many :groups
@@ -15,13 +14,19 @@ class User < ApplicationRecord
     (0...24).map{domain.to_a[rand(domain.length)] }.join
   end
 
-  def self.make_friend(friend1, friend2)
-    friend1.friends << friend2
-    friend2.friends << friend1
-  end
-
-  def check_same_reference
-    errors.add(:friend, "can't be the same reference") if id == friend.id
+  def self.make_friend(user1, user2)
+    begin
+      User.transaction do
+        raise "user cannot be the same item." if user1 == user2
+        user1.friends << user2
+        user2.friends << user1
+        user1.save!
+        user2.save!
+      end
+      head :ok
+    rescue e
+      head :bad_request
+    end
   end
 
   def friend_url()
