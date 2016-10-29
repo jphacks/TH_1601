@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20161029162655) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["token"], name: "index_registration_tokens_on_token", unique: true
+    t.index ["user_id"], name: "index_registration_tokens_on_user_id"
   end
 
   create_table "rooms", force: :cascade do |t|
