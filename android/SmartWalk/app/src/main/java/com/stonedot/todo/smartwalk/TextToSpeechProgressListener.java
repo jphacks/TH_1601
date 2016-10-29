@@ -1,6 +1,5 @@
 package com.stonedot.todo.smartwalk;
 
-import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 
 /**
@@ -8,28 +7,10 @@ import android.speech.tts.UtteranceProgressListener;
  * こいつは実装じゃなくて継承なので注意！
  */
 
-/*
-public enum Mode {
-    LINENotification,
-    ConfirmReply,
-    RepeatReplyMessage,
-    ReplyFinished
-}
-    private Mode mMode;
-
-    public void setMode(Mode mode) {
-        mMode = mode;
-    }
-
-public class TextToSpeechProgressListener implements TextToSpeech.OnUtteranceCompletedListener {
-
-    @Override
-    public void onUtteranceCompleted(String s) {
-
-    }
+public class TextToSpeechProgressListener extends UtteranceProgressListener {
 
     public interface TextToSpeechListener {
-        void onTextToSpeechFinished();
+        void onTextToSpeechFinished(Guide guide);
     }
     private TextToSpeechListener mListener;
 
@@ -44,7 +25,8 @@ public class TextToSpeechProgressListener implements TextToSpeech.OnUtteranceCom
 
     @Override
     public void onDone(String s) {
-        mListener.onTextToSpeechFinished();
+        Guide guide = Guide.valueOf(s);
+        mListener.onTextToSpeechFinished(guide);
     }
 
     @Override
@@ -52,5 +34,3 @@ public class TextToSpeechProgressListener implements TextToSpeech.OnUtteranceCom
 
     }
 }
-
-*/

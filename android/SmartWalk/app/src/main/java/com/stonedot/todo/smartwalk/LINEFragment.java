@@ -1,21 +1,15 @@
 package com.stonedot.todo.smartwalk;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,14 +28,9 @@ public class LINEFragment extends Fragment {
 
     private Activity mActivity;
     private View mFragment;
-    private TextToSpeechManager mTTS;
 
     private TextView mTextMessage;
     private Button mButtonLine;
-
-    public void setTextToSpeechManager(TextToSpeechManager tts) {
-        mTTS = tts;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,7 +38,6 @@ public class LINEFragment extends Fragment {
         mFragment = inflater.inflate(R.layout.fragment_line_settings, container, false);
         findViews();
         attachEvents();
-        notificationServiceStart();
         return mFragment;
     }
 
@@ -120,46 +108,7 @@ public class LINEFragment extends Fragment {
     private void attachEvents() {
     }
 
-    /**
-     * NotificatonListenerServiceの開始処理
-     */
-    private void notificationServiceStart() {
-        Intent intent = new Intent(mActivity, LINENotificationService.class);
-        mActivity.startService(intent);
-        IntentFilter filter = new IntentFilter(LINENotificationService.PACKAGE_NAME);
-        LocalBroadcastManager.getInstance(mActivity).registerReceiver(onNotice, filter);
+    public void displayText(String sender, String content) {
+        mTextMessage.setText(sender + "\n" + content);
     }
-
-    private BroadcastReceiver onNotice = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String sender = intent.getStringExtra(LINENotificationService.KEY_SENDER);
-            String content = intent.getStringExtra(LINENotificationService.KEY_CONTENT);
-            mTextMessage.setText(sender + "\n" + content);
-            speech(sender, content);
-            // reply(sender);
-        }
-    };
-
-    // TODO 通知時のメッセージ形式
-    private void speech(String sender, String content) {
-        if(mTTS == null) return;
-        String format = mActivity.getString(R.string.format_line);
-        String text = sender + format + content;
-        mTTS.speechText(text);
-    }
-
-    // TODO よく考えたら自動返信とかめっちゃ危険じゃん！
-    private void reply(String sender) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("line://msg/text/ありがとう"));
-        try {
-            mActivity.startActivityForResult(intent, 0);
-        } catch (Exception e) {
-            Toast.makeText(mActivity, "LINEアプリをインストールしてください", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
 }

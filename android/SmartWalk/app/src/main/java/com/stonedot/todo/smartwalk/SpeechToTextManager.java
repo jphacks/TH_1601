@@ -20,13 +20,20 @@ public class SpeechToTextManager {
         mSTT.setRecognitionListener(mSTTListener);
     }
 
-    public void startSpeechToText() {
+    public void startSpeechToText(Guide guide) {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(Guide.Guide.toString(), guide);
         mSTT.startListening(intent);
     }
 
     public void stopSpeechToText() {
         mSTT.stopListening();
+    }
+
+    public void shutdown() {
+        if(mSTT == null) return;
+        mSTT.cancel();
+        mSTT.destroy();
     }
 }

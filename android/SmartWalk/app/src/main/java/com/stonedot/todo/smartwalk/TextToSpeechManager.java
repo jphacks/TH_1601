@@ -14,18 +14,17 @@ import java.util.Locale;
 public class TextToSpeechManager implements TextToSpeech.OnInitListener {
 
     private Context mContext;
-    private TextToSpeech.OnUtteranceCompletedListener mTTSListener;
+    private TextToSpeechProgressListener mTTSListener;
     private TextToSpeech mTTS;
     private boolean mInitCompletedFlag = false;
 
-    public TextToSpeechManager(Context context, TextToSpeech.OnUtteranceCompletedListener ttsListener) {
+    public TextToSpeechManager(Context context, TextToSpeechProgressListener.TextToSpeechListener ttsListener) {
         mContext = context;
-        mTTSListener = ttsListener;
+        mTTSListener = new TextToSpeechProgressListener(ttsListener);
         mTTS = new TextToSpeech(context, this);
     }
 
     @Override
-    // TODO エラー処理はもうちょっとよくならないものか
     public void onInit(int status) {
         if (status != TextToSpeech.SUCCESS) {
             Toast.makeText(mContext, "初期化エラー", Toast.LENGTH_SHORT).show();
@@ -33,7 +32,7 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
         }
 
         if(mTTSListener != null) {
-            mTTS.setOnUtteranceCompletedListener(mTTSListener);
+            mTTS.setOnUtteranceProgressListener(mTTSListener);
         }
 
         Locale locale = Locale.JAPANESE;
@@ -44,16 +43,17 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
         else Toast.makeText(mContext, "言語選択エラー", Toast.LENGTH_SHORT).show();
     }
 
-    public void speechText(String text) {
+    public void speechText(String text, Guide guide) {
         if (mTTS == null || text.length() <= 0 || !mInitCompletedFlag) return;
         HashMap<String, String> myHashAlarm = new HashMap<String, String>();
-        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "MESSAGE");
-        mTTS.speak(removePictureChars(text), TextToSpeech.QUEUE_FLUSH, myHashAlarm);
+        myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, guide.toString());
+        mTTS.speak(removePictureChars(text), TextToSpeech.QUEUE_ADD, myHashAlarm);
     }
 
-    // TODO どこでシャットダウンしようか…
     public void shutdown() {
-        if(mTTS != null) mTTS.shutdown();
+        if(mTTS == null) return;
+        mTTS.shutdown();
+        mTTS = null;
     }
 
     // TODO LINEで動かないぞ
