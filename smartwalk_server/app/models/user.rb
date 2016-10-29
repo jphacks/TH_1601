@@ -21,7 +21,7 @@ class User < ApplicationRecord
 
   def friend_url()
     routes = Rails.application.routes.url_helpers
-    routes.url_for controller: 'users', action: 'friend', id: friend_token
+    routes.url_for host: 'smartwalk.stonedot.com', controller: 'users', action: 'friend', id: friend_token
   end
 
   def search_user(sender, displayName)
