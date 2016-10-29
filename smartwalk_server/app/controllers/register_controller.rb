@@ -12,5 +12,6 @@ class RegisterController < ApplicationController
     user = RegistrationToken.find_by(token: token).user
     user.mid = mid
     user.save
+    head :ok
   end
 end
