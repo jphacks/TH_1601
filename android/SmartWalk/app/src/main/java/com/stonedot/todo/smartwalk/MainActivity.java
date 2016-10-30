@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements
         String format = getString(R.string.format_line);
         String text = sender + format + content;
 
-        // TODO Notification2回呼ばれるのなんとかならないか
+        // Notification2回以上呼ばれるので対策
         if(text.equals(lastText))
         {
             lastText = text;
@@ -61,9 +61,12 @@ public class MainActivity extends AppCompatActivity implements
 
         mGuidance.setLastReservation(new Reservation(SNS.LINE, sender, content, new Date()));
 
-        //
-        mGuidance.nextGuide(Guide.LINENotification, text);
         mLINEFragment.displayText(sender, content);
+        if(mGuidance.isReceivable()) {
+            mGuidance.nextGuide(Guide.LINENotification, text);
+            return;
+        }
+        mTTS.textToSpeech(text, Guide.Guide);
     }
 
     @Override

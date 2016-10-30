@@ -48,7 +48,6 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
         if (mTTS == null || text.length() <= 0 || !mInitCompletedFlag) return;
         HashMap<String, String> parameter = new HashMap<String, String>();
         parameter.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, guide.toString());
-        Log.d("TextToSpeechManager", "TextToSpeech.getMaxSpeechInputLength():" + TextToSpeech.getMaxSpeechInputLength());
         mTTS.speak(removePictureChars(text), TextToSpeech.QUEUE_ADD, parameter);
     }
 
@@ -58,7 +57,7 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
         mTTS = null;
     }
 
-    // TODO LINEで動かないぞ
+    // TODO 絵文字認識できない
     private String removePictureChars(String text) {
         Log.d("TextToSpeechManager", text);
         StringBuffer buffer = new StringBuffer();

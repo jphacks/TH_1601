@@ -103,7 +103,7 @@ public class SpeechToTextListenerImpl implements RecognitionListener {
 
     @Override
     public void onResults(Bundle bundle) {
-        // TODO Resultから一番ちゃんとしたものを選ぶ方法はある？
+        // とりあえず第1候補を使う
         ArrayList<String> results = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         if(mListener != null) mListener.onGetTextFromSpeech(results.get(0), nextGuide);
     }

@@ -36,6 +36,11 @@ public class SmartWalkGuidance {
     private Reservation lastReservation;
     private String mMessage;
 
+    private boolean mReceivable = true;
+
+    public boolean isReceivable() {
+        return mReceivable;
+    }
 
     public SmartWalkGuidance(Activity activity, GuidanceListener listener, TextToSpeechManager tts, SpeechToTextManager sst) {
         mActivity = activity;
@@ -77,7 +82,9 @@ public class SmartWalkGuidance {
         Log.d("nextGuide", guide.toString());
         switch (guide) {
             case LINENotification:
+                if(!mReceivable) break;
                 mTTS.textToSpeech(text, ConfirmReply);
+                mReceivable = false;
                 break;
 
             case ConfirmReply:
@@ -105,8 +112,8 @@ public class SmartWalkGuidance {
                     mTTS.textToSpeech("メッセージの取得に失敗しました。", ConfirmReply);
                     break;
                 }
-                mMessage = "返信メッセージは、" + text + "、です。";
-                mTTS.textToSpeech(text, ConfirmSend);
+                mMessage = text;
+                mTTS.textToSpeech("返信メッセージは、" + text + "、です。", ConfirmSend);
                 break;
 
             case ConfirmSend:
@@ -129,17 +136,23 @@ public class SmartWalkGuidance {
                 mTTS.textToSpeech("メッセージを送信しました。", Finish);
                 break;
 
-            case Finish: break;
+            case Finish:
+                mReceivable = true;
+                break;
 
             case Reserve:
                 reserve();
+                mReceivable = true;
                 break;
 
             case Failed:
                 mTTS.textToSpeech("音声認識に失敗しました。", Finish);
+                mReceivable = true;
                 break;
 
-            default: break;
+            default:
+                mReceivable = true;
+                break;
         }
     }
 }
