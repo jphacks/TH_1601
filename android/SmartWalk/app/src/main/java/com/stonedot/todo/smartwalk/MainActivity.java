@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private FragmentManager mFM;
     private LINEFragment mLINEFragment;
-    private ReservationListFragment mReservationListFragment;
+    // private ReservationListFragment mReservationListFragment;
     private LINEBroadcastReceiver mLINEReceiver;
 
     @Override
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onReserve(Reservation reservation) {
-        mReservationListFragment.add(reservation);
+        // mReservationListFragment.add(reservation);
     }
 
     @Override
