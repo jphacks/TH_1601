@@ -10,8 +10,8 @@ class MessageController < ApplicationController
         users = User.find_by_sql(["select other.user_id from users as own " +
                                   "inner join friendships as relation " +
                                   "on own.id = relation.user_id " +
-                                  "inner join users as other" +
-                                  "on relation.friend_user_id = other.id" +
+                                  "inner join users as other " +
+                                  "on relation.friend_user_id = other.id " +
                                   "where other.display_name = ? and " +
                                   "own.id = ? limit 1", display_name, sender_user_id.to_i])
         receiver = users.first.id.to_s
