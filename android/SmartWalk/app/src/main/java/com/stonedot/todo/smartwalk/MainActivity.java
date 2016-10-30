@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private FragmentManager mFM;
     private LINEFragment mLINEFragment;
-    // private ReservationListFragment mReservationListFragment;
+    private ReservationListFragment mReservationListFragment;
     private LINEBroadcastReceiver mLINEReceiver;
 
     @Override
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements
         // フラグメント関係
         mFM = getSupportFragmentManager();
         mLINEFragment = (LINEFragment) mFM.findFragmentById(R.id.fragment_line);
-        // mReservationListFragment = (ReservationListFragment) mFM.findFragmentById(R.id.fragment_reservation_list);
+        mReservationListFragment = (ReservationListFragment) mFM.findFragmentById(R.id.fragment_reservation_list);
 
         // 音声関連のマネージャー
         mTTS = new TextToSpeechManager(this, this);
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onReserve(Reservation reservation) {
-        // mReservationListFragment.add(reservation);
+        mReservationListFragment.add(reservation);
     }
 
     @Override

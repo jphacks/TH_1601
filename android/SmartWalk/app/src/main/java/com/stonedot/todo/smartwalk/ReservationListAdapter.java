@@ -1,6 +1,7 @@
 package com.stonedot.todo.smartwalk;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ public class ReservationListAdapter extends ArrayAdapter<Reservation> {
     public View getView(int position, View convertView, ViewGroup parent) {
         setConvertView(convertView, parent);
         setItem(getItem(position));
+        Log.d("ReservationListAdapter", "GetView");
         return mConvertView;
     }
 

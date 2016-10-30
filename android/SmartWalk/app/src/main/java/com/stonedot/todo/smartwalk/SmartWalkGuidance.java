@@ -3,6 +3,11 @@ package com.stonedot.todo.smartwalk;
 import android.app.Activity;
 import android.util.Log;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.stonedot.todo.smartwalk.Guide.ConfirmReply;
 import static com.stonedot.todo.smartwalk.Guide.ConfirmSend;
 import static com.stonedot.todo.smartwalk.Guide.DecideReply;
@@ -29,6 +34,8 @@ public class SmartWalkGuidance {
     private TextToSpeechManager mTTS;
     private SpeechToTextManager mSTT;
     private Reservation lastReservation;
+    private String mMessage;
+
 
     public SmartWalkGuidance(Activity activity, GuidanceListener listener, TextToSpeechManager tts, SpeechToTextManager sst) {
         mActivity = activity;
@@ -42,6 +49,26 @@ public class SmartWalkGuidance {
     private void reserve() {
         if(mListener == null) return;
         mListener.onReserve(lastReservation);
+    }
+
+    private boolean send() {
+        URL url = null;
+        try {
+            url = new URL("https://smartwalk.stonedot.com/message/push");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        Map<String, String> sendData = new HashMap<String, String>() {
+            {
+                put("display_name", lastReservation.getSender());
+                put("sender", UserDataStorage.getLineMid(mActivity.getBaseContext()));
+                put("message", mMessage);
+            }
+        };
+        HttpJSONClient http = new HttpJSONClient(url, sendData);
+        http.post(null);
+        return true;
     }
 
     // TODO メッセージの割り込み対策
@@ -78,8 +105,8 @@ public class SmartWalkGuidance {
                     mTTS.textToSpeech("メッセージの取得に失敗しました。", ConfirmReply);
                     break;
                 }
-                String repeatMessage = "返信メッセージは、" + text + "、です。";
-                mTTS.textToSpeech(repeatMessage, ConfirmSend);
+                mMessage = "返信メッセージは、" + text + "、です。";
+                mTTS.textToSpeech(mMessage, ConfirmSend);
                 break;
 
             case ConfirmSend:
@@ -91,12 +118,14 @@ public class SmartWalkGuidance {
                 break;
 
             case Send:
-                if(!text.equals("送信")) {
+                if(!text.equals("送信") || mMessage == null || mMessage == "") {
                     mTTS.textToSpeech("メッセージを再入力してください。", StartReply);
                     break;
                 }
-                // TODO メッセージ送信
-                if(false) break;
+                if(!send()) {
+                    mTTS.textToSpeech("メッセージの送信に失敗しました。メッセージを再入力してください。", StartReply);
+                    break;
+                }
                 mTTS.textToSpeech("メッセージを送信しました。", Finish);
                 break;
 

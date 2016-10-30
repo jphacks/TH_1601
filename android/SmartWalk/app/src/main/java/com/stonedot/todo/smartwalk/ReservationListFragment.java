@@ -1,8 +1,11 @@
 package com.stonedot.todo.smartwalk;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,28 +24,35 @@ public class ReservationListFragment extends Fragment {
 
     private View mFragment;
     private ListView mListView;
-    private ArrayAdapter<Reservation> mAdapter;
+    private ReservationListAdapter mAdapter;
 
     public ReservationListFragment() {
         // Required empty public constructor
     }
 
-    public void add(Reservation item) {
-        mAdapter.add(item);
+    public void add(final Reservation item) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.add(item);
+            }
+        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mFragment = inflater.inflate(R.layout.fragment_reservation_list, container, false);
-        mAdapter = new ArrayAdapter(getActivity(), R.layout.reservation_list_item);
-
-        Reservation test = new Reservation(SNS.LINE, "テストさん", "これはテストです", new Date());
-        mAdapter.add(test);
-
+        mAdapter = new ReservationListAdapter(getActivity().getApplicationContext());
+        
         mListView = (ListView) mFragment.findViewById(R.id.reservation_list);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(onItemClick());
         mListView.setOnItemLongClickListener(onItemLongClick());
+
+        ColorDrawable sage = new ColorDrawable(Color.argb(000, 255, 255, 255));
+        mListView.setDivider(sage);
+        mListView.setDividerHeight(10);
+
         return mFragment;
     }
 
@@ -59,6 +69,7 @@ public class ReservationListFragment extends Fragment {
                 ListView listView = (ListView) adapterView;
                 Reservation item = (Reservation) listView.getItemAtPosition(i);
                 mListener.onItemClicked(item);
+                mAdapter.remove(item);
             }
         };
     }
@@ -68,8 +79,8 @@ public class ReservationListFragment extends Fragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ListView listView = (ListView) adapterView;
-                Reservation selectedItem = (Reservation) listView.getItemAtPosition(i);
-                mAdapter.remove(selectedItem);
+                Reservation item = (Reservation) listView.getItemAtPosition(i);
+                mAdapter.remove(item);
                 return false;
             }
         };

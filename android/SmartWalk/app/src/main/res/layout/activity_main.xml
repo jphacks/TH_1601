@@ -23,15 +23,14 @@
             tools:layout="@layout/fragment_line">
         </fragment>
 
-        <!--
         <fragment
             android:id="@+id/fragment_reservation_list"
             android:name="com.stonedot.todo.smartwalk.ReservationListFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             tools:layout="@layout/fragment_reservation_list">
         </fragment>
-        -->
 
     </LinearLayout>
 

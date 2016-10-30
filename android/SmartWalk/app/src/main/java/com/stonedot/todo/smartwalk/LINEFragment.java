@@ -70,7 +70,7 @@ public class LINEFragment extends Fragment {
                     Log.d("LineFragment", "Line login canceled.");
                     break;
                 default:
-                    Log.d("LineFragment", "Line login go something wrong.");
+                    Log.d("LineFragment", "Line login go something wrong." + future.getProgress().toString());
                     break;
             }
         }
