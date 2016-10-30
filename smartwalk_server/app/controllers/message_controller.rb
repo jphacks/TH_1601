@@ -7,16 +7,30 @@ class MessageController < ApplicationController
     receiver = json['receiver']
     unless receiver then
       begin
-        sender = User.find_by(user_id: sender_user_id)
-        receiver = sender.friends.where(display_name: display_name).take.user_id
+        users = User.find_by_sql(["select other.user_id from users as own " +
+                                  "inner join friendships as relation " +
+                                  "on own.id = relation.user_id " +
+                                  "inner join users as other" +
+                                  "on relation.friend_user_id = other.id" +
+                                  "where other.display_name = '?' and " +
+                                  "own.id = ? limit 1", display_name, sender_user_id.to_i])
+        receiver = users.first.id.to_s
+#        receiver = User.find_by(user_id: sender_user_id)
+#                   .friends.find_by(display_name: display_name).take.user_id
       rescue
         logger.debug("Cannot determine receiver")
         return head :bad_request
       end
     end
+
+    msg_str = json['message']
+    Dir.chdir("../period_putter") do
+      msg_str = `python3 period_putter.py "#{json['message']}"`
+    end
+
     message = {
       type: 'text',
-      text: json['message']
+      text: msg_str
     }
 
     logger.debug("Start pushing message...")
