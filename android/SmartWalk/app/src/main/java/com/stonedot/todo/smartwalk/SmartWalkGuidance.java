@@ -106,7 +106,7 @@ public class SmartWalkGuidance {
                     break;
                 }
                 mMessage = "返信メッセージは、" + text + "、です。";
-                mTTS.textToSpeech(mMessage, ConfirmSend);
+                mTTS.textToSpeech(text, ConfirmSend);
                 break;
 
             case ConfirmSend:

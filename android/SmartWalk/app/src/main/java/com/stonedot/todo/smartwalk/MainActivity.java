@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements
         lastText = text;
 
         mGuidance.setLastReservation(new Reservation(SNS.LINE, sender, content, new Date()));
+
+        //
         mGuidance.nextGuide(Guide.LINENotification, text);
         mLINEFragment.displayText(sender, content);
     }
