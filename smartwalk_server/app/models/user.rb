@@ -6,7 +6,7 @@ class User < ApplicationRecord
   has_many :registration_tokens, dependent: :destroy
   has_and_belongs_to_many :groups
   has_and_belongs_to_many :rooms
-  has_and_belongs_to_many :friends, class_name: "User", join_table: :friendships,
+  has_and_belongs_to_many :friends, autosave: true, class_name: "User", join_table: :friendships,
                           foreign_key: 'user_id', association_foreign_key: :friend_user_id
 
   def self.generate_random_string
