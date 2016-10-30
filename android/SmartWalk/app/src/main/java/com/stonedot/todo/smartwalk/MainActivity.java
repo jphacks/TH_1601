@@ -59,6 +59,12 @@ public class MainActivity extends AppCompatActivity implements
         }
         lastText = text;
 
+        if(sender.equals("SmartWalk")) {
+            String[] split = content.split(";");
+            sender = split[0];
+            content = split[1];
+        }
+
         mGuidance.setLastReservation(new Reservation(SNS.LINE, sender, content, new Date()));
 
         mLINEFragment.displayText(sender, content);
