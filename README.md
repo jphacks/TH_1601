@@ -27,7 +27,7 @@ SmartWalkは，受信したLINEメッセージを音声で読み上げ，音声�
 Aさんが友人のBさんとSmartWalkを使ってLINEメッセージのやりとりをしたい場合，次のような準備が必要である．
   1. Aさん，BさんはSmartWalkのAndroidアプリをそれぞれダウンロードする．
   2. Aさん，BさんはSmartWalkのLINE BOTとそれぞれ友達になる．
-  3. Aさん，BさんはSmartWalkのBOTから送られてくる1つ目のURLにアクセスし，そのURLからSmartWalアプリを立ち上げる．
+  3. Aさん，BさんはSmartWalkのBOTから送られてくる1つ目のURLにアクセスし，そのURLからSmartWalkアプリを立ち上げる．
   4. Aさんは，SmartWalkのBOTから送られてくる2つ目のURLをBさんに（LINEなどで）教える．
   5. BさんはAさんに教えてもらったURLにアクセスする．これでSmartWalkは2人が友達であると認識する．
 
@@ -76,13 +76,14 @@ Android関連
 * TextToSpeech (テキスト読み上げ)
 * SpeechToText（音声認識）
 * NotificationService (通知の取得等）
+* Line Android SDK（ログイン処理）
 
 サーバ側
 * Line::Bot::API (SDK of the LINE Messaging API for Ruby)
 * Ruby on Rails
 * Unicorn
 * Nginx
-* Sqlite
+* SQLite
 
 #### デバイス
 * Android端末
