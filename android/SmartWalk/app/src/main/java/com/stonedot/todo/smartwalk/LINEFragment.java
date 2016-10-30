@@ -1,7 +1,6 @@
 package com.stonedot.todo.smartwalk;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,9 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import jp.line.android.sdk.LineSdkContext;
 import jp.line.android.sdk.LineSdkContextManager;
@@ -80,7 +76,7 @@ public class LINEFragment extends Fragment {
         }
     };
 
-    private static final String FILENAME_LINE_ID = "line_id";
+    public static final String FILENAME_LINE_ID = "line_id";
     private ApiRequestFutureListener myProfileComplete = new ApiRequestFutureListener<Profile>() {
         @Override
         public void requestComplete(ApiRequestFuture<Profile> future) {
@@ -88,13 +84,9 @@ public class LINEFragment extends Fragment {
                 case SUCCESS:
                     Log.d("LineFragment", "Profile retrieving succeeded.");
                     Profile profile = future.getResponseObject();
-                    try(FileOutputStream fos = getActivity().openFileOutput(FILENAME_LINE_ID, Context.MODE_PRIVATE)) {
-                        fos.write(profile.mid.getBytes());
-                        Log.d("LineFragment", "Line ID: " + profile.mid.toString());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Log.d("LineFragment", "Saving LINE ID failed.");
-                    }
+                    UserDataStorage.putLineMid(getActivity(), profile.mid);
+                    LINEFriendDialogFragment dialog = new LINEFriendDialogFragment();
+                    dialog.show(getFragmentManager(), "line_dialog");
                     break;
                 default:
                     Log.d("LineFragment", "Profile retrieving failed.");

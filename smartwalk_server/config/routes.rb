@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
+  get 'users/friend/:id', to: 'users#friend', format: false
+  post 'users/friend', to: 'users#friend_add', format: false
+
   get 'register/:id', to: 'register#show', format: false
-  post 'register/:id', to: 'register#register', format: false
+  post 'register', to: 'register#register', format: false
 
   post 'message/push', format: false
 
