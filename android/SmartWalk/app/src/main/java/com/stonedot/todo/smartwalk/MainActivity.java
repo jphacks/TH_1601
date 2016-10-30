@@ -3,14 +3,15 @@ package com.stonedot.todo.smartwalk;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements
         SpeechToTextListenerImpl.SpeechToTextListener,
         TextToSpeechProgressListener.TextToSpeechListener,
-        LINEBroadcastReceiver.LINEBroadcastReceiverListener{
+        LINEBroadcastReceiver.LINEBroadcastReceiverListener,
+        SmartWalkGuidance.GuidanceListener,
+        ReservationListFragment.ReservationListListener {
 
     private TextToSpeechManager mTTS;
     private SpeechToTextManager mSTT;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private FragmentManager mFM;
     private LINEFragment mLINEFragment;
+    private ReservationListFragment mReservationListFragment;
     private LINEBroadcastReceiver mLINEReceiver;
 
     @Override
@@ -29,44 +31,37 @@ public class MainActivity extends AppCompatActivity implements
         // フラグメント関係
         mFM = getSupportFragmentManager();
         mLINEFragment = (LINEFragment) mFM.findFragmentById(R.id.fragment_line);
+        mReservationListFragment = (ReservationListFragment) mFM.findFragmentById(R.id.fragment_reservation_list);
 
         // 音声関連のマネージャー
         mTTS = new TextToSpeechManager(this, this);
         mSTT = new SpeechToTextManager(this, this);
 
         // ガイダンス
-        mGuidance = new SmartWalkGuidance(this, mTTS, mSTT);
+        mGuidance = new SmartWalkGuidance(this, this, mTTS, mSTT);
 
         // 通知関係
         NotificationServiceAccess.showNotificationAccessSettingMenu(this);
         mLINEReceiver = new LINEBroadcastReceiver(this, this);
-
-        speechTest();
-    }
-
-    private void speechTest() {
-        Button mSoundRecognizeButton = (Button) findViewById(R.id.sound_recognize);
-        mSoundRecognizeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSTT.speechToText(null);
-            }
-        });
     }
 
     private String lastText = "";
     @Override
     public void onLINENotification(String sender, String content) {
-        // TODO 通知時のメッセージ形式
         String format = getString(R.string.format_line);
         String text = sender + format + content;
 
         // TODO Notification2回呼ばれるのなんとかならないか
-        if(text.equals(lastText)) return;
+        if(text.equals(lastText))
+        {
+            lastText = text;
+            return;
+        }
         lastText = text;
 
-        mGuidance.setLastSender(sender);
-        mGuidance.setLastContent(content);
+        mGuidance.setLastReservation(new Reservation(SNS.LINE, sender, content, new Date()));
+
+        //
         mGuidance.nextGuide(Guide.LINENotification, text);
         mLINEFragment.displayText(sender, content);
     }
@@ -82,8 +77,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onGetTextFromSpeechFailed() {
-        Toast.makeText(this, "音声入力なし", Toast.LENGTH_SHORT).show();
+    public void onGetTextFromSpeechFailed(Guide guide) {
+        mGuidance.nextGuide(guide, "");
     }
 
     @Override
@@ -91,5 +86,16 @@ public class MainActivity extends AppCompatActivity implements
         super.onDestroy();
         mTTS.shutdown();
         mSTT.shutdown();
+    }
+
+    @Override
+    public void onReserve(Reservation reservation) {
+        mReservationListFragment.add(reservation);
+    }
+
+    @Override
+    public void onItemClicked(Reservation reservation) {
+        mGuidance.setLastReservation(reservation);
+        mGuidance.nextGuide(Guide.DecideReply, "返信");
     }
 }

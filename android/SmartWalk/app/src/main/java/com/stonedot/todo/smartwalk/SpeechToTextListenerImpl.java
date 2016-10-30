@@ -16,7 +16,7 @@ public class SpeechToTextListenerImpl implements RecognitionListener {
 
     public interface SpeechToTextListener {
         void onGetTextFromSpeech(String text, Guide guide);
-        void onGetTextFromSpeechFailed();
+        void onGetTextFromSpeechFailed(Guide guide);
     }
     private SpeechToTextListener mListener;
 
@@ -77,7 +77,7 @@ public class SpeechToTextListenerImpl implements RecognitionListener {
             case SpeechRecognizer.ERROR_NO_MATCH:
                 // 音声認識結果無し
                 Toast.makeText(mContext, "音声を認識できませんでした。", Toast.LENGTH_SHORT).show();
-                if(mListener != null) mListener.onGetTextFromSpeechFailed();
+                if(mListener != null) mListener.onGetTextFromSpeechFailed(nextGuide);
                 break;
             case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
                 Toast.makeText(mContext, "音声認識プログラムが使用中です", Toast.LENGTH_SHORT).show();
@@ -88,7 +88,7 @@ public class SpeechToTextListenerImpl implements RecognitionListener {
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
                 // 音声入力無し
                 Toast.makeText(mContext, "音声入力がありませんでした。", Toast.LENGTH_SHORT).show();
-                if(mListener != null) mListener.onGetTextFromSpeechFailed();
+                if(mListener != null) mListener.onGetTextFromSpeechFailed(nextGuide);
                 break;
             default:
                 break;

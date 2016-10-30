@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 import jp.line.android.sdk.LineSdkContext;
 import jp.line.android.sdk.LineSdkContextManager;
 import jp.line.android.sdk.api.ApiClient;
@@ -33,7 +35,6 @@ public class LINEFragment extends Fragment {
         mActivity = getActivity();
         mFragment = inflater.inflate(R.layout.fragment_line, container, false);
         findViews();
-        attachEvents();
         return mFragment;
     }
 
@@ -71,7 +72,12 @@ public class LINEFragment extends Fragment {
                     Log.d("LineFragment", "Line login canceled.");
                     break;
                 default:
-                    Log.d("LineFragment", "Line login go something wrong.");
+                    Log.d("LineFragment", "Line login go something wrong." + future.getProgress().toString());
+                    Log.d("LineFragment", "We are trying fallback.");
+                    String mid = RandomStringUtils.randomAlphanumeric(30);
+                    UserDataStorage.putLineMid(getActivity(), mid);
+                    LINEFriendDialogFragment dialog = new LINEFriendDialogFragment();
+                    dialog.show(getFragmentManager(), "line_dialog");
                     break;
             }
         }
@@ -95,12 +101,6 @@ public class LINEFragment extends Fragment {
             }
         }
     };
-
-    /**
-     * ボタンが押されたときにhoge()を実行するなど、UIイベントと関数を結びつける
-     */
-    private void attachEvents() {
-    }
 
     public void displayText(String sender, String content) {
         mTextMessage.setText(sender + "\n" + content);
