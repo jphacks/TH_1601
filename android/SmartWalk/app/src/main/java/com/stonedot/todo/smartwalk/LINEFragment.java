@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 import jp.line.android.sdk.LineSdkContext;
 import jp.line.android.sdk.LineSdkContextManager;
 import jp.line.android.sdk.api.ApiClient;
@@ -71,6 +73,11 @@ public class LINEFragment extends Fragment {
                     break;
                 default:
                     Log.d("LineFragment", "Line login go something wrong." + future.getProgress().toString());
+                    Log.d("LineFragment", "We are trying fallback.");
+                    String mid = RandomStringUtils.randomAlphanumeric(30);
+                    UserDataStorage.putLineMid(getActivity(), mid);
+                    LINEFriendDialogFragment dialog = new LINEFriendDialogFragment();
+                    dialog.show(getFragmentManager(), "line_dialog");
                     break;
             }
         }
