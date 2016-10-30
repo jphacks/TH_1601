@@ -52,7 +52,11 @@ public class MainActivity extends AppCompatActivity implements
         String text = sender + format + content;
 
         // TODO Notification2回呼ばれるのなんとかならないか
-        if(text.equals(lastText)) return;
+        if(text.equals(lastText))
+        {
+            lastText = text;
+            return;
+        }
         lastText = text;
 
         mGuidance.setLastReservation(new Reservation(SNS.LINE, sender, content, new Date()));
