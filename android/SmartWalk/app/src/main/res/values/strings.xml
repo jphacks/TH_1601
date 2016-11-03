@@ -7,7 +7,4 @@
     <string name="reserved_notification">保留された通知\n(タップで返信/長押しで削除)</string>
     <string name="no_notification">最新の通知はありません。</string>
     <string name="format_line">さんからのラインの通知です。</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

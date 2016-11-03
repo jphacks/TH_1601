@@ -61,7 +61,7 @@ public class SpeechToTextListenerImpl implements RecognitionListener {
                 Toast.makeText(mContext, "音声データを認識できませんでした", Toast.LENGTH_SHORT).show();
                 break;
             case SpeechRecognizer.ERROR_CLIENT:
-                Toast.makeText(mContext, "未確認のエラーが発生しました", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "インターネット接続を確認してください", Toast.LENGTH_SHORT).show();
                 break;
             case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
                 Toast.makeText(mContext, "音声認識機能を使用する権限がありません", Toast.LENGTH_SHORT).show();

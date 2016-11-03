@@ -107,7 +107,7 @@ public class SmartWalkGuidance {
                 break;
 
             case RepeatReply:
-                if(text == null || text.equals("")) {
+                if(text == null || text.isEmpty()) {
                     mTTS.textToSpeech("メッセージの取得に失敗しました", ConfirmReply);
                     break;
                 }
@@ -124,7 +124,7 @@ public class SmartWalkGuidance {
                 break;
 
             case Send:
-                if(!text.equals("送信") || mMessage == null || mMessage.equals("")) {
+                if(!text.equals("送信") || mMessage == null || mMessage.isEmpty()) {
                     mTTS.textToSpeech("メッセージを再入力してください", StartReply);
                     break;
                 }

@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.Date;
 
@@ -128,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.about:
                 new AboutDialogFragment().show(mFM, getString(R.string.app_name));
+                Toast.makeText(this, TextManager.extractSpeakableChars("abcあいう漢字012漢字"), Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
