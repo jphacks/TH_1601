@@ -17,27 +17,26 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:textAlignment="center"
-        android:text="Powered By"/>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:src="@mipmap/line_icon"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textAlignment="center"
         android:text="Developers"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="30dp"
         android:textAlignment="center"
-        android:text="Shusei Komatsu\nHiroaki Goto\nMinari Yoshinari"/>
+        android:text="Fuurin\nNoimin\nStoneDot"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center"
+        android:text="Support"/>
+
+    <ImageView
+        android:id="@+id/goo_image"
+        android:layout_width="150px"
+        android:layout_height="75px"
+        android:layout_marginBottom="30dp"/>
 
 </LinearLayout>

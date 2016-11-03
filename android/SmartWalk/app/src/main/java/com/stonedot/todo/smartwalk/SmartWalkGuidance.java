@@ -86,7 +86,7 @@ public class SmartWalkGuidance {
 
             case ConfirmReply:
                 mIsWorking = true;
-                mTTS.textToSpeech("「返信」と言うと返信します。", GetAnswerConfirmReply);
+                mTTS.textToSpeech("「返信」と言うと返信します", GetAnswerConfirmReply);
                 break;
 
             case GetAnswerConfirmReply:
@@ -95,11 +95,11 @@ public class SmartWalkGuidance {
 
             case DecideReply:
                 if(!text.equals("返信")) {
-                    mTTS.textToSpeech("保留されます。", Reserve);
+                    mTTS.textToSpeech("保留されます", Reserve);
                     break;
                 }
                 mIsWorking = true;
-                mTTS.textToSpeech("メッセージを入力してください。", StartReply);
+                mTTS.textToSpeech("メッセージを入力してください", StartReply);
                 break;
 
             case StartReply:
@@ -107,16 +107,16 @@ public class SmartWalkGuidance {
                 break;
 
             case RepeatReply:
-                if(text == null || text == "") {
-                    mTTS.textToSpeech("メッセージの取得に失敗しました。", ConfirmReply);
+                if(text == null || text.equals("")) {
+                    mTTS.textToSpeech("メッセージの取得に失敗しました", ConfirmReply);
                     break;
                 }
                 mMessage = text;
-                mTTS.textToSpeech("返信メッセージは、" + text + "、です。", ConfirmSend);
+                mTTS.textToSpeech("返信メッセージは、" + text + "、です", ConfirmSend);
                 break;
 
             case ConfirmSend:
-                mTTS.textToSpeech("「送信」と言うと送信します。", GetAnswerConfirmSend);
+                mTTS.textToSpeech("「送信」と言うと送信します", GetAnswerConfirmSend);
                 break;
 
             case GetAnswerConfirmSend:
@@ -124,15 +124,15 @@ public class SmartWalkGuidance {
                 break;
 
             case Send:
-                if(!text.equals("送信") || mMessage == null || mMessage == "") {
-                    mTTS.textToSpeech("メッセージを再入力してください。", StartReply);
+                if(!text.equals("送信") || mMessage == null || mMessage.equals("")) {
+                    mTTS.textToSpeech("メッセージを再入力してください", StartReply);
                     break;
                 }
                 if(!send()) {
-                    mTTS.textToSpeech("メッセージの送信に失敗しました。メッセージを再入力してください。", StartReply);
+                    mTTS.textToSpeech("メッセージの送信に失敗しました、メッセージを再入力してください", StartReply);
                     break;
                 }
-                mTTS.textToSpeech("メッセージを送信しました。", Finish);
+                mTTS.textToSpeech("メッセージを送信しました", Finish);
                 break;
 
             case Finish:
@@ -145,7 +145,7 @@ public class SmartWalkGuidance {
                 break;
 
             case Failed:
-                mTTS.textToSpeech("音声認識に失敗しました。", Finish);
+                mTTS.textToSpeech("音声認識に失敗しました", Finish);
                 mIsWorking = false;
                 break;
 
