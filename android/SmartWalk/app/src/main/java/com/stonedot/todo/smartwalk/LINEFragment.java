@@ -5,12 +5,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.w3c.dom.Text;
+
+import java.util.Date;
 
 import jp.line.android.sdk.LineSdkContext;
 import jp.line.android.sdk.LineSdkContextManager;
@@ -22,13 +27,18 @@ import jp.line.android.sdk.login.LineLoginFuture;
 import jp.line.android.sdk.login.LineLoginFutureListener;
 import jp.line.android.sdk.model.Profile;
 
+import static com.stonedot.todo.smartwalk.R.mipmap.line_icon;
+
+// TODO LINEじゃなくて、最新メッセージを表示するフラグメント、LatestNotificationFragmentとかであるべき？
 public class LINEFragment extends Fragment {
 
     private Activity mActivity;
     private View mFragment;
 
-    private TextView mTextMessage;
-    private Button mButtonLine;
+    private ImageView mLatestSNS;
+    private TextView mLatestSender;
+    private TextView mLatestContent;
+    private TextView mLatestTime;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,20 +52,35 @@ public class LINEFragment extends Fragment {
      * UIのインスタンスをメンバ変数として取得
      */
     private void findViews() {
-        mTextMessage = (TextView) mFragment.findViewById(R.id.text_line_message);
-        mButtonLine = (Button)mFragment.findViewById(R.id.buttonForLineLogin);
-        Log.d("LineFragment", "Setting event listener.");
-        mButtonLine.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("LineFragment", "Clicked LINE login button.");
-                LineSdkContext sdkContext = LineSdkContextManager.getSdkContext();
-                LineAuthManager authManager = sdkContext.getAuthManager();
-                LineLoginFuture loginFuture = authManager.login(getActivity());
-                loginFuture.addFutureListener(loginComplete);
-            }
+        mLatestSNS = (ImageView) mFragment.findViewById(R.id.latest_sns_image);
+        mLatestSender = (TextView) mFragment.findViewById(R.id.latest_sender);
+        mLatestContent = (TextView) mFragment.findViewById(R.id.latest_content);
+        mLatestTime = (TextView) mFragment.findViewById(R.id.latest_time);
+    }
 
-        });
+    public void displayText(SNS sns, String sender, String content) {
+        mLatestSNS.setImageResource(snsIcon(sns));
+        mLatestSender.setText(sender);
+        mLatestContent.setText(content);
+        mLatestTime.setText(new Date().toString());
+    }
+
+    public int snsIcon(SNS sns) {
+        switch (sns) {
+            case LINE:
+                return R.mipmap.line_icon;
+            default:
+                return 0;
+        }
+    }
+
+    // TODO 以下3つのメソッドはLINELoginクラスとかに移したほうがいい
+    public void openLoginPage() {
+        Log.d("LineFragment", "Clicked LINE login button.");
+        LineSdkContext sdkContext = LineSdkContextManager.getSdkContext();
+        LineAuthManager authManager = sdkContext.getAuthManager();
+        LineLoginFuture loginFuture = authManager.login(getActivity());
+        loginFuture.addFutureListener(loginComplete);
     }
 
     private LineLoginFutureListener loginComplete = new LineLoginFutureListener() {
@@ -101,8 +126,4 @@ public class LINEFragment extends Fragment {
             }
         }
     };
-
-    public void displayText(String sender, String content) {
-        mTextMessage.setText(sender + "\n" + content);
-    }
 }

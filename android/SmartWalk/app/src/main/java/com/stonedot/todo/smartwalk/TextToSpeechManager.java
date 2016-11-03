@@ -51,8 +51,14 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
         mTTS.speak(removePictureChars(text), TextToSpeech.QUEUE_ADD, parameter);
     }
 
+    public void cancel() {
+        if (mTTS == null) return;
+        if (mTTS.isSpeaking()) mTTS.stop();
+    }
+
     public void shutdown() {
         if(mTTS == null) return;
+        mTTS.stop();
         mTTS.shutdown();
         mTTS = null;
     }

@@ -33,13 +33,13 @@ public class SmartWalkGuidance {
     private Activity mActivity;
     private TextToSpeechManager mTTS;
     private SpeechToTextManager mSTT;
-    private Reservation lastReservation;
+    private Reservation latestReservation;
     private String mMessage;
 
-    private boolean mReceivable = true;
+    private boolean mIsWorking = true;
 
-    public boolean isReceivable() {
-        return mReceivable;
+    public boolean isWorking() {
+        return mIsWorking;
     }
 
     public SmartWalkGuidance(Activity activity, GuidanceListener listener, TextToSpeechManager tts, SpeechToTextManager sst) {
@@ -49,11 +49,11 @@ public class SmartWalkGuidance {
         mSTT = sst;
     }
 
-    public void setLastReservation(Reservation reservation) { lastReservation = reservation; }
+    public void setLatestReservation(Reservation reservation) { latestReservation = reservation; }
 
     private void reserve() {
         if(mListener == null) return;
-        mListener.onReserve(lastReservation);
+        mListener.onReserve(latestReservation);
     }
 
     private boolean send() {
@@ -66,7 +66,7 @@ public class SmartWalkGuidance {
         }
         Map<String, String> sendData = new HashMap<String, String>() {
             {
-                put("display_name", lastReservation.getSender());
+                put("display_name", latestReservation.getSender());
                 put("sender", UserDataStorage.getLineMid(mActivity.getBaseContext()));
                 put("message", mMessage);
             }
@@ -76,18 +76,16 @@ public class SmartWalkGuidance {
         return true;
     }
 
-    // TODO メッセージの割り込み対策
     public void nextGuide(Guide guide, String text) {
         if(guide == null) return;
         Log.d("nextGuide", guide.toString());
         switch (guide) {
             case LINENotification:
-                if(!mReceivable) break;
                 mTTS.textToSpeech(text, ConfirmReply);
-                mReceivable = false;
                 break;
 
             case ConfirmReply:
+                mIsWorking = true;
                 mTTS.textToSpeech("「返信」と言うと返信します。", GetAnswerConfirmReply);
                 break;
 
@@ -100,6 +98,7 @@ public class SmartWalkGuidance {
                     mTTS.textToSpeech("保留されます。", Reserve);
                     break;
                 }
+                mIsWorking = true;
                 mTTS.textToSpeech("メッセージを入力してください。", StartReply);
                 break;
 
@@ -137,22 +136,26 @@ public class SmartWalkGuidance {
                 break;
 
             case Finish:
-                mReceivable = true;
+                mIsWorking = false;
                 break;
 
             case Reserve:
                 reserve();
-                mReceivable = true;
+                mIsWorking = false;
                 break;
 
             case Failed:
                 mTTS.textToSpeech("音声認識に失敗しました。", Finish);
-                mReceivable = true;
+                mIsWorking = false;
                 break;
 
             default:
-                mReceivable = true;
                 break;
         }
+    }
+
+    public void cancelGuide() {
+        mTTS.cancel();
+        mSTT.cancel();
     }
 }

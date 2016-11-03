@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">SmartWalk</string>
-    <string name="description">このアプリをバックグラウンドで\n起動している間、LINE通知を受け取ります。</string>s
-    <string name="no_message">受け取ったメッセージはまだありません。</string>
+    <string name="description">このアプリをバックグラウンドで\n起動している間、LINE通知を受け取ります。</string>
+    <string name="line_login">LINEにログイン</string>
+    <string name="about">SmartWalkについて</string>
+    <string name="latest_notification">最新の通知</string>
+    <string name="reserved_notification">保留された通知\n(タップで返信/長押しで削除)</string>
+    <string name="no_notification">最新の通知はありません。</string>
     <string name="format_line">さんからのラインの通知です。</string>
 
     <!-- TODO: Remove or change this placeholder text -->

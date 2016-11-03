@@ -3,6 +3,8 @@ package com.stonedot.todo.smartwalk;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.util.Date;
 
@@ -12,6 +14,9 @@ public class MainActivity extends AppCompatActivity implements
         LINEBroadcastReceiver.LINEBroadcastReceiverListener,
         SmartWalkGuidance.GuidanceListener,
         ReservationListFragment.ReservationListListener {
+
+    public final String SMART_WALK_SENDER_NAME = "SmartWalk";
+    public final String SMART_WALK_SEPARATOR = ";";
 
     private TextToSpeechManager mTTS;
     private SpeechToTextManager mSTT;
@@ -40,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements
         // ガイダンス
         mGuidance = new SmartWalkGuidance(this, this, mTTS, mSTT);
 
-        // 通知関係
+        // SNS通知関係
         NotificationServiceAccess.showNotificationAccessSettingMenu(this);
         mLINEReceiver = new LINEBroadcastReceiver(this, this);
     }
@@ -59,20 +64,21 @@ public class MainActivity extends AppCompatActivity implements
         }
         lastText = text;
 
-        if(sender.equals("SmartWalk")) {
-            String[] split = content.split(";");
+        if(sender.equals(SMART_WALK_SENDER_NAME)) {
+            String[] split = content.split(SMART_WALK_SEPARATOR);
+            StringBuilder builder = new StringBuilder();
             sender = split[0];
-            content = split[1];
+            for(String str : split)builder.append(str);
+            content = builder.toString();
         }
 
-        mGuidance.setLastReservation(new Reservation(SNS.LINE, sender, content, new Date()));
+        mGuidance.setLatestReservation(new Reservation(SNS.LINE, sender, content, new Date()));
 
-        mLINEFragment.displayText(sender, content);
-        if(mGuidance.isReceivable()) {
-            mGuidance.nextGuide(Guide.LINENotification, text);
-            return;
-        }
-        mTTS.textToSpeech(text, Guide.Guide);
+        mLINEFragment.displayText(SNS.LINE, sender, content);
+
+        if(mGuidance.isWorking()) mGuidance.cancelGuide();
+
+        mGuidance.nextGuide(Guide.LINENotification, text);
     }
 
     @Override
@@ -104,7 +110,30 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClicked(Reservation reservation) {
-        mGuidance.setLastReservation(reservation);
+        mGuidance.setLatestReservation(reservation);
         mGuidance.nextGuide(Guide.DecideReply, "返信");
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.option, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.line_login:
+                if(mLINEFragment != null) mLINEFragment.openLoginPage();
+                break;
+            case R.id.about:
+                new AboutDialogFragment().show(mFM, getString(R.string.app_name));
+                break;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

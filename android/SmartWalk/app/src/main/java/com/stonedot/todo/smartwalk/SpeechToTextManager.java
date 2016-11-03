@@ -35,7 +35,9 @@ public class SpeechToTextManager {
         });
     }
 
-    public void stopSpeechToText() {
+    public void cancel() {
+        if(mSTT == null) return;
+        mSTT.cancel();
         mSTT.stopListening();
     }
 
