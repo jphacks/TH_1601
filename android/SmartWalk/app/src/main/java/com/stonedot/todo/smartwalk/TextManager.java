@@ -12,8 +12,8 @@ import java.util.regex.Pattern;
 public class TextManager {
 
     public static final String MATCH_EISUU = "a-zA-Z0-9";
-    public static final String MATCH_HIRAGANA = "\\u3041-\\u3096";
-    public static final String MATCH_KATAKANA = "\\u30A1-\\u30FA";
+    public static final String MATCH_HIRAGANA = "\u3041-\u3096";
+    public static final String MATCH_KATAKANA = "\u30A1-\u30FA";
     public static final String MATCH_KANJI = "一-龠";
 
     public static String extractSpeakableChars(String text) {
