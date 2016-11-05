@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.Date;
+import java.util.Formatter;
 
 public class MainActivity extends AppCompatActivity implements
         SpeechToTextListenerImpl.SpeechToTextListener,
@@ -54,8 +55,9 @@ public class MainActivity extends AppCompatActivity implements
     private String lastText = "";
     @Override
     public void onLINENotification(String sender, String content) {
-        String format = getString(R.string.format_line);
-        String text = sender + format + content;
+        Formatter fm = new Formatter();
+        fm.format(getString(R.string.line_sender_format), sender, content);
+        String text = fm.toString();
 
         // Notification2回以上呼ばれるので対策
         if(text.equals(lastText))
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mGuidance.setLatestReservation(new Reservation(SNS.LINE, sender, content, new Date()));
 
-        mLINEFragment.displayText(SNS.LINE, sender, content);
+        mLINEFragment.displayLatestNotification(SNS.LINE, sender, content);
 
         if(mGuidance.isWorking()) mGuidance.cancelGuide();
 
@@ -112,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onItemClicked(Reservation reservation) {
         mGuidance.setLatestReservation(reservation);
-        mGuidance.nextGuide(Guide.DecideReply, "返信");
+        mGuidance.nextGuide(Guide.DecideReply, getString(R.string.decide_reply_word));
     }
 
     @Override
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.about:
                 new AboutDialogFragment().show(mFM, getString(R.string.app_name));
-                //Toast.makeText(this, TextManager.extractSpeakableChars("abcあいう漢字012漢字"), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, TextManager.extractSpeakableChars("abcあいう漢字012漢字"), Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

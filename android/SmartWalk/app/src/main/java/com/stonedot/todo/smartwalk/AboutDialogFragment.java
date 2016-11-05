@@ -22,11 +22,11 @@ public class AboutDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View dialogView = getActivity().getLayoutInflater().inflate(R.layout.dialog_about, null);
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        alert.setTitle(R.string.about)
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        dialogBuilder.setTitle(R.string.about)
             .setView(dialogView)
             .create();
-        AlertDialog dialog = alert.show();
+        AlertDialog dialog = dialogBuilder.show();
         setGooImage(dialogView);
         return dialog;
     }

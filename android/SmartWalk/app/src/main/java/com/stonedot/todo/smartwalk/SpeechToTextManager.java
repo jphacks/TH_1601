@@ -28,7 +28,7 @@ public class SpeechToTextManager {
             public void run() {
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH); // ACTION_WEB_SEARCH
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "音声を入力");
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT,  mActivity.getString(R.string.input_speech));
                 mSTTListener.setNextGuide(guide);
                 mSTT.startListening(intent);
             }

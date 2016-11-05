@@ -58,7 +58,7 @@ public class LINEFragment extends Fragment {
         mLatestTime = (TextView) mFragment.findViewById(R.id.latest_time);
     }
 
-    public void displayText(SNS sns, String sender, String content) {
+    public void displayLatestNotification(SNS sns, String sender, String content) {
         mLatestSNS.setImageResource(snsIcon(sns));
         mLatestSender.setText(sender);
         mLatestContent.setText(content);

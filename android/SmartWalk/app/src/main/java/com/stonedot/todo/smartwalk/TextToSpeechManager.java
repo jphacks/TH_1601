@@ -27,7 +27,7 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
     @Override
     public void onInit(int status) {
         if (status != TextToSpeech.SUCCESS) {
-            Toast.makeText(mContext, "初期化エラー", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.tts_error_init, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -40,7 +40,7 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
             mTTS.setLanguage(locale);
             mInitCompletedFlag = true;
         }
-        else Toast.makeText(mContext, "言語選択エラー", Toast.LENGTH_SHORT).show();
+        else Toast.makeText(mContext, R.string.tts_error_language, Toast.LENGTH_SHORT).show();
     }
 
     public void textToSpeech(String text, Guide guide) {

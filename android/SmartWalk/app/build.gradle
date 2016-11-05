@@ -36,3 +36,7 @@ dependencies {
     compile 'commons-lang:commons-lang:+'
     testCompile 'junit:junit:4.12'
 }
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,7 +87,7 @@ public class SmartWalkGuidance {
 
             case ConfirmReply:
                 mIsWorking = true;
-                mTTS.textToSpeech("「返信」と言うと返信します", GetAnswerConfirmReply);
+                mTTS.textToSpeech(t(R.string.guide_confirm_reply), GetAnswerConfirmReply);
                 break;
 
             case GetAnswerConfirmReply:
@@ -94,12 +95,12 @@ public class SmartWalkGuidance {
                 break;
 
             case DecideReply:
-                if(!text.equals("返信")) {
-                    mTTS.textToSpeech("保留されます", Reserve);
+                if(!text.equals(t(R.string.decide_reply_word))) {
+                    mTTS.textToSpeech(t(R.string.guide_reserve), Reserve);
                     break;
                 }
                 mIsWorking = true;
-                mTTS.textToSpeech("メッセージを入力してください", StartReply);
+                mTTS.textToSpeech(t(R.string.guide_input_message), StartReply);
                 break;
 
             case StartReply:
@@ -108,15 +109,17 @@ public class SmartWalkGuidance {
 
             case RepeatReply:
                 if(text == null || text.isEmpty()) {
-                    mTTS.textToSpeech("メッセージの取得に失敗しました", ConfirmReply);
+                    mTTS.textToSpeech(t(R.string.guide_input_message_failed), ConfirmReply);
                     break;
                 }
                 mMessage = text;
-                mTTS.textToSpeech("返信メッセージは、" + text + "、です", ConfirmSend);
+                Formatter fm = new Formatter();
+                fm.format(t(R.string.guide_input_message_repeat_format), mMessage);
+                mTTS.textToSpeech(fm.toString(), ConfirmSend);
                 break;
 
             case ConfirmSend:
-                mTTS.textToSpeech("「送信」と言うと送信します", GetAnswerConfirmSend);
+                mTTS.textToSpeech(t(R.string.guide_confirm_send), GetAnswerConfirmSend);
                 break;
 
             case GetAnswerConfirmSend:
@@ -124,15 +127,15 @@ public class SmartWalkGuidance {
                 break;
 
             case Send:
-                if(!text.equals("送信") || mMessage == null || mMessage.isEmpty()) {
-                    mTTS.textToSpeech("メッセージを再入力してください", StartReply);
+                if(!text.equals(t(R.string.decide_send_word)) || mMessage == null || mMessage.isEmpty()) {
+                    mTTS.textToSpeech(t(R.string.guide_input_message_again), StartReply);
                     break;
                 }
                 if(!send()) {
-                    mTTS.textToSpeech("メッセージの送信に失敗しました、メッセージを再入力してください", StartReply);
+                    mTTS.textToSpeech(t(R.string.guide_send_failed), StartReply);
                     break;
                 }
-                mTTS.textToSpeech("メッセージを送信しました", Finish);
+                mTTS.textToSpeech(t(R.string.guide_send_message), Finish);
                 break;
 
             case Finish:
@@ -145,13 +148,17 @@ public class SmartWalkGuidance {
                 break;
 
             case Failed:
-                mTTS.textToSpeech("音声認識に失敗しました", Finish);
+                mTTS.textToSpeech(t(R.string.guide_input_speech_failed), Finish);
                 mIsWorking = false;
                 break;
 
             default:
                 break;
         }
+    }
+
+    private String t(int stringId) {
+        return mActivity.getString(stringId);
     }
 
     public void cancelGuide() {
