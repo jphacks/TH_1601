@@ -5,6 +5,7 @@ class MessageController < ApplicationController
     sender_mid = json['sender']
     display_name = json['display_name']
     receiver = json['receiver']
+    sender_user = User.find_by(mid: sender_mid)
     unless receiver then
       begin
         user = User.select_first_friend_of(sender_mid, display_name)
@@ -24,7 +25,7 @@ class MessageController < ApplicationController
 
     message = {
       type: 'text',
-      text: msg_str
+      text: "#{sender_user.display_name}: #{msg_str}"
     }
 
     logger.debug("Start pushing message...")
