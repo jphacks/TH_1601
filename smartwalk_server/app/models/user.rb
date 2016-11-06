@@ -49,13 +49,13 @@ class User < ApplicationRecord
   end
 
   def self.count_friends_of(sender_mid, display_name)
-    User.find_by_sql(["select count(*) from users as own " +
+    User.find_by_sql(["select other.user_id from users as own " +
                       "inner join friendships as relation " +
                       "on own.id = relation.user_id " +
                       "inner join users as other " +
                       "on relation.friend_user_id = other.id " +
                       "where other.display_name = ? and " +
-                      "own.mid = ?", display_name, sender_mid]).first.count
+                      "own.mid = ?", display_name, sender_mid]).count
   end
 
   def friend_url()
