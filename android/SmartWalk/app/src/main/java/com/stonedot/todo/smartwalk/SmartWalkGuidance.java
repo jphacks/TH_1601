@@ -1,7 +1,11 @@
 package com.stonedot.todo.smartwalk;
 
 import android.app.Activity;
+import android.util.JsonReader;
 import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,6 +23,7 @@ import static com.stonedot.todo.smartwalk.Guide.GetAnswerConfirmReply;
 import static com.stonedot.todo.smartwalk.Guide.GetAnswerConfirmSend;
 import static com.stonedot.todo.smartwalk.Guide.Notification;
 import static com.stonedot.todo.smartwalk.Guide.RepeatReply;
+import static com.stonedot.todo.smartwalk.Guide.RequestFriend;
 import static com.stonedot.todo.smartwalk.Guide.Reserve;
 import static com.stonedot.todo.smartwalk.Guide.Send;
 import static com.stonedot.todo.smartwalk.Guide.StartReply;
@@ -53,12 +58,17 @@ public class SmartWalkGuidance {
 
     public void nextGuide(Guide guide, String text) {
         if(guide == null) return;
-        if(!(isNotificationQueueEmpty() || guide == Notification || guide == ConfirmReply)) return;
+        if(!isGuideContinuable(guide)) return;
 
         switch (guide) {
             case Notification:
                 notificationQueue.add(text);
-                mTTS.textToSpeech(text, ConfirmReply);
+                mTTS.textToSpeech(text, RequestFriend);
+                break;
+
+            case RequestFriend:
+                isFriendRequest(requestFriendCallback);
+                nextGuide(ConfirmReply);
                 break;
 
             case ConfirmReply:
@@ -139,6 +149,13 @@ public class SmartWalkGuidance {
         nextGuide(guide, "");
     }
 
+    public boolean isGuideContinuable(Guide guide) {
+        return isNotificationQueueEmpty()
+                || guide == Notification
+                || guide == RequestFriend
+                || guide == ConfirmReply;
+    }
+
     public boolean isNotificationQueueEmpty() {
         return notificationQueue.size() == 0;
     }
@@ -181,4 +198,35 @@ public class SmartWalkGuidance {
         http.post(null);
         return true;
     }
+
+    private void isFriendRequest(HttpJSONClient.Responded callback) {
+        URL url = null;
+        try {
+            url = new URL("https://smartwalk.stonedot.com/message/can_push");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return;
+        }
+        Map<String, String> sendData = new HashMap<String, String>() {
+            {
+                put("sender", UserDataStorage.getLineMid(mActivity.getBaseContext()));
+                put("display_name", latestReservation.getSender());
+            }
+        };
+        HttpJSONClient http = new HttpJSONClient(url, sendData);
+        http.post(callback);
+    }
+
+    private HttpJSONClient.Responded requestFriendCallback = new HttpJSONClient.Responded() {
+        @Override
+        public void responded(int code, String statusMessage, String content) {
+            try {
+                JSONObject json = new JSONObject(content).getJSONObject("can_push");
+                if(json != null && json.getBoolean("can_push")) nextGuide(ConfirmReply);
+                else mTTS.textToSpeech(t(R.string.guide_be_friend_to_reply), Finish);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 }
