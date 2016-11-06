@@ -44,12 +44,16 @@ public class ReservationListFragment extends Fragment {
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(onItemClick());
         mListView.setOnItemLongClickListener(onItemLongClick());
-
-        ColorDrawable sage = new ColorDrawable(Color.WHITE);
-        mListView.setDivider(sage);
-        mListView.setDividerHeight(10);
+        setDivider(mListView);
 
         return mFragment;
+    }
+
+    private void setDivider(ListView listView) {
+        int dividerColor = Color.parseColor("#EEEEEE");
+        ColorDrawable sage = new ColorDrawable(dividerColor);
+        listView.setDivider(sage);
+        listView.setDividerHeight(10);
     }
 
     @Override
@@ -77,7 +81,7 @@ public class ReservationListFragment extends Fragment {
                 ListView listView = (ListView) adapterView;
                 Reservation item = (Reservation) listView.getItemAtPosition(i);
                 mAdapter.remove(item);
-                return false;
+                return true;
             }
         };
     }
