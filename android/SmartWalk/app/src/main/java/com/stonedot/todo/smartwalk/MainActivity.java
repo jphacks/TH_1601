@@ -6,10 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
-import java.util.Date;
-import java.util.Formatter;
 
 public class MainActivity extends AppCompatActivity implements
         SpeechToTextListenerImpl.SpeechToTextListener,
@@ -35,8 +31,11 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         //preferenceによる読み込み
+        //ファイルが存在しなくても良いのか？
         SharedPreferences pref = getSharedPreferences(getString(R.string.setting_file), MODE_PRIVATE);
         boolean isNotRead = pref.getBoolean(keys[0], false);
+
+
 
         // フラグメント関係
         mFM = getSupportFragmentManager();

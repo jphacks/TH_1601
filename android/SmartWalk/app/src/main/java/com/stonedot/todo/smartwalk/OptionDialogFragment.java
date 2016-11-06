@@ -1,7 +1,6 @@
 package com.stonedot.todo.smartwalk;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -23,9 +22,15 @@ public class OptionDialogFragment extends DialogFragment {
         View dialogView = getActivity().getLayoutInflater().inflate(R.layout.dialog_option, null);
 
         CheckBox checkBox = (CheckBox) getActivity().findViewById(R.id.checkbox);
-        checkBox.setChecked(false);
+
+        //preferenceによる読み込み
+        //ファイルが存在しなくても良いのか？
+        SharedPreferences pref = getContext().getSharedPreferences(getString(R.string.setting_file), MODE_PRIVATE);
+        boolean isNotRead = pref.getBoolean(keys[0], false);
+
+        checkBox.setChecked(isNotRead);
         checkBox.setOnClickListener(new View.OnClickListener() {
-           @Override
+         @Override
             public void onClick(View v) {
                CheckBox checkBox = (CheckBox) v;
                boolean checked = checkBox.isChecked();
