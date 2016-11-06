@@ -34,4 +34,13 @@ class UsersController < ApplicationController
     end
     render json: result
   end
+
+  def friend_url
+    body = request.body.read
+    json = JSON.parse(body)
+    user_mid = json['mid']
+    url = User.find_by(mid: user_mid).friend_url
+    result = { "friend_url" => url }
+    render json: result
+  end
 end
