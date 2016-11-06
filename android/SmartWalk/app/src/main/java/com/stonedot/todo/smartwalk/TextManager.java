@@ -5,8 +5,7 @@ import android.util.Log;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Set;
 
 import static java.text.Normalizer.Form.NFKC;
 
@@ -24,6 +23,7 @@ public class TextManager {
         {put("…", "");}
         {put("～", "ー");}
     };
+    private static Set<String> keys = hashMap.keySet();
 
     public static String extractSpeakableChars(String text) {
         String normalizedText = Normalizer.normalize(text, NFKC);
@@ -34,7 +34,7 @@ public class TextManager {
             char c = text.charAt( i );
             Character.UnicodeBlock ub = Character.UnicodeBlock.of( c );
             if( !Arrays.asList(photographBlocks).contains( ub ) ) {
-                if( hashMap.keySet().contains( c ) ){
+                if( keys.contains( c ) ){
                     sb.append( hashMap.get( c ) );
                 }else{
                     sb.append(c);
