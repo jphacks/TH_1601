@@ -11,33 +11,14 @@ import java.util.regex.Pattern;
 
 public class TextManager {
 
-    public static final String MATCH_EISUU = "a-zA-Z0-9";
-    public static final String MATCH_HIRAGANA = "\u3041-\u3096";
-    public static final String MATCH_KATAKANA = "\u30A1-\u30FA";
-    public static final String MATCH_KANJI = "一-龠";
-
     public static String extractSpeakableChars(String text) {
-        Pattern p = Pattern.compile(allowRegex());
-        Matcher m = p.matcher(text);
-        StringBuilder builder = new StringBuilder();
-        while (m.find())  {
-            if (BuildConfig.DEBUG) Log.d("TextManager", m.group());
-            builder.append(m.group());
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < text.length(); i++ ){
+            //絵文字じゃなかったら追加
+            if( Character.UnicodeBlock.of( text.charAt( i )) != Character.UnicodeBlock.MISCELLANEOUS_SYMBOLS_AND_PICTOGRAPHS){
+                sb.append( text.charAt(i) );
+            }
         }
-        return builder.toString();
-    }
-
-    private static String allowRegex() {
-        return toMatchRegex(
-                MATCH_EISUU,
-                MATCH_HIRAGANA,
-                MATCH_KATAKANA
-        );
-    }
-
-    private static String toMatchRegex(String... codes) {
-        StringBuilder builder = new StringBuilder();
-        for(String code : codes) builder.append(code);
-        return "[" + builder.toString() + "]+";
+        return sb.toString();
     }
 }
