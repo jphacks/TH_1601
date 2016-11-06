@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,14 +34,8 @@ public class SmartWalkGuidance {
     private Activity mActivity;
     private TextToSpeechManager mTTS;
     private SpeechToTextManager mSTT;
-    private Reservation lastReservation;
+    private Reservation latestReservation;
     private String mMessage;
-
-    private boolean mReceivable = true;
-
-    public boolean isReceivable() {
-        return mReceivable;
-    }
 
     public SmartWalkGuidance(Activity activity, GuidanceListener listener, TextToSpeechManager tts, SpeechToTextManager sst) {
         mActivity = activity;
@@ -49,11 +44,104 @@ public class SmartWalkGuidance {
         mSTT = sst;
     }
 
-    public void setLastReservation(Reservation reservation) { lastReservation = reservation; }
+    public void setLatestReservation(Reservation reservation) { latestReservation = reservation; }
+
+    public void nextGuide(Guide guide, String text) {
+        if(guide == null) return;
+        Log.d("nextGuide", guide.toString());
+        switch (guide) {
+            case Notification:
+                mTTS.textToSpeech(text, ConfirmReply);
+                break;
+
+            case ConfirmReply:
+                // 通知を最後まで読み切っていること
+                mTTS.textToSpeech(t(R.string.guide_confirm_reply), GetAnswerConfirmReply);
+                break;
+
+            case GetAnswerConfirmReply:
+                mSTT.speechToText(DecideReply);
+                break;
+
+            case DecideReply:
+                if(!text.equals(t(R.string.decide_reply_word))) {
+                    mTTS.textToSpeech(t(R.string.guide_reserve), Reserve);
+                    break;
+                }
+                mTTS.textToSpeech(t(R.string.guide_input_message), StartReply);
+                break;
+
+            case StartReply:
+                mSTT.speechToText(RepeatReply);
+                break;
+
+            case RepeatReply:
+                if(text == null || text.isEmpty()) {
+                    mTTS.textToSpeech(t(R.string.guide_input_message_failed), ConfirmReply);
+                    break;
+                }
+                mMessage = text;
+                Formatter fm = new Formatter();
+                fm.format(t(R.string.guide_input_message_repeat_format), mMessage);
+                mTTS.textToSpeech(fm.toString(), ConfirmSend);
+                break;
+
+            case ConfirmSend:
+                mTTS.textToSpeech(t(R.string.guide_confirm_send), GetAnswerConfirmSend);
+                break;
+
+            case GetAnswerConfirmSend:
+                mSTT.speechToText(Send);
+                break;
+
+            case Send:
+                if(!text.equals(t(R.string.decide_send_word)) || mMessage == null || mMessage.isEmpty()) {
+                    mTTS.textToSpeech(t(R.string.guide_input_message_again), StartReply);
+                    break;
+                }
+                if(!send()) {
+                    mTTS.textToSpeech(t(R.string.guide_send_failed), Finish);
+                    break;
+                }
+                mTTS.textToSpeech(t(R.string.guide_send_message), Finish);
+                break;
+
+            case Finish:
+                break;
+
+            case Reserve:
+                reserve();
+                break;
+
+            case Failed:
+                mTTS.textToSpeech(t(R.string.guide_input_speech_failed), Finish);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public void nextGuide(Guide guide) {
+        nextGuide(guide, "");
+    }
+
+    public void cancelGuide() {
+        mTTS.cancel();
+        mSTT.cancel();
+    }
+
+    public void notificationWhileGuidance() {
+
+    }
+
+    private String t(int stringId) {
+        return mActivity.getString(stringId);
+    }
 
     private void reserve() {
         if(mListener == null) return;
-        mListener.onReserve(lastReservation);
+        mListener.onReserve(latestReservation);
     }
 
     private boolean send() {
@@ -66,7 +154,7 @@ public class SmartWalkGuidance {
         }
         Map<String, String> sendData = new HashMap<String, String>() {
             {
-                put("display_name", lastReservation.getSender());
+                put("display_name", latestReservation.getSender());
                 put("sender", UserDataStorage.getLineMid(mActivity.getBaseContext()));
                 put("message", mMessage);
             }
@@ -74,85 +162,5 @@ public class SmartWalkGuidance {
         HttpJSONClient http = new HttpJSONClient(url, sendData);
         http.post(null);
         return true;
-    }
-
-    // TODO メッセージの割り込み対策
-    public void nextGuide(Guide guide, String text) {
-        if(guide == null) return;
-        Log.d("nextGuide", guide.toString());
-        switch (guide) {
-            case LINENotification:
-                if(!mReceivable) break;
-                mTTS.textToSpeech(text, ConfirmReply);
-                mReceivable = false;
-                break;
-
-            case ConfirmReply:
-                mTTS.textToSpeech("「返信」と言うと返信します。", GetAnswerConfirmReply);
-                break;
-
-            case GetAnswerConfirmReply:
-                mSTT.speechToText(DecideReply);
-                break;
-
-            case DecideReply:
-                if(!text.equals("返信")) {
-                    mTTS.textToSpeech("保留されます。", Reserve);
-                    break;
-                }
-                mTTS.textToSpeech("メッセージを入力してください。", StartReply);
-                break;
-
-            case StartReply:
-                mSTT.speechToText(RepeatReply);
-                break;
-
-            case RepeatReply:
-                if(text == null || text == "") {
-                    mTTS.textToSpeech("メッセージの取得に失敗しました。", ConfirmReply);
-                    break;
-                }
-                mMessage = text;
-                mTTS.textToSpeech("返信メッセージは、" + text + "、です。", ConfirmSend);
-                break;
-
-            case ConfirmSend:
-                mTTS.textToSpeech("「送信」と言うと送信します。", GetAnswerConfirmSend);
-                break;
-
-            case GetAnswerConfirmSend:
-                mSTT.speechToText(Send);
-                break;
-
-            case Send:
-                if(!text.equals("送信") || mMessage == null || mMessage == "") {
-                    mTTS.textToSpeech("メッセージを再入力してください。", StartReply);
-                    break;
-                }
-                if(!send()) {
-                    mTTS.textToSpeech("メッセージの送信に失敗しました。メッセージを再入力してください。", StartReply);
-                    break;
-                }
-                mTTS.textToSpeech("メッセージを送信しました。", Finish);
-                break;
-
-            case Finish:
-                mReceivable = true;
-                break;
-
-            case Reserve:
-                reserve();
-                mReceivable = true;
-                break;
-
-            case Failed:
-                mTTS.textToSpeech("音声認識に失敗しました。", Finish);
-                mReceivable = true;
-                break;
-
-            default:
-                mReceivable = true;
-                break;
-        }
     }
 }

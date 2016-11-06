@@ -3,13 +3,16 @@ package com.stonedot.todo.smartwalk;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.Date;
+import java.util.Formatter;
 
 public class MainActivity extends AppCompatActivity implements
         SpeechToTextListenerImpl.SpeechToTextListener,
         TextToSpeechProgressListener.TextToSpeechListener,
-        LINEBroadcastReceiver.LINEBroadcastReceiverListener,
         SmartWalkGuidance.GuidanceListener,
         ReservationListFragment.ReservationListListener {
 
@@ -19,8 +22,8 @@ public class MainActivity extends AppCompatActivity implements
     private SmartWalkGuidance mGuidance;
 
     private FragmentManager mFM;
-    private LINEFragment mLINEFragment;
     private ReservationListFragment mReservationListFragment;
+
     private LINEBroadcastReceiver mLINEReceiver;
 
     @Override
@@ -30,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements
 
         // フラグメント関係
         mFM = getSupportFragmentManager();
-        mLINEFragment = (LINEFragment) mFM.findFragmentById(R.id.fragment_line);
         mReservationListFragment = (ReservationListFragment) mFM.findFragmentById(R.id.fragment_reservation_list);
 
         // 音声関連のマネージャー
@@ -40,47 +42,16 @@ public class MainActivity extends AppCompatActivity implements
         // ガイダンス
         mGuidance = new SmartWalkGuidance(this, this, mTTS, mSTT);
 
-        // 通知関係
+        // SNS通知関係
         NotificationServiceAccess.showNotificationAccessSettingMenu(this);
-        mLINEReceiver = new LINEBroadcastReceiver(this, this);
-    }
 
-    private String lastText = "";
-    @Override
-    public void onLINENotification(String sender, String content) {
-        String format = getString(R.string.format_line);
-        String text = sender + format + content;
-
-        // Notification2回以上呼ばれるので対策
-        if(text.equals(lastText))
-        {
-            lastText = text;
-            return;
-        }
-        lastText = text;
-
-        if(sender.equals("SmartWalk")) {
-            String[] split = content.split(";");
-            if(split.length > 1) {
-                sender = split[0];
-                split[0] = "";
-
-            }
-        }
-
-        mGuidance.setLastReservation(new Reservation(SNS.LINE, sender, content, new Date()));
-
-        mLINEFragment.displayText(sender, content);
-        if(mGuidance.isReceivable()) {
-            mGuidance.nextGuide(Guide.LINENotification, text);
-            return;
-        }
-        mTTS.textToSpeech(text, Guide.Guide);
+        mLINEReceiver = new LINEBroadcastReceiver(this, mGuidance);
     }
 
     @Override
     public void onTextToSpeechFinished(Guide guide) {
-        mGuidance.nextGuide(guide, null);
+
+        mGuidance.nextGuide(guide);
     }
 
     @Override
@@ -90,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onGetTextFromSpeechFailed(Guide guide) {
-        mGuidance.nextGuide(guide, "");
+        mGuidance.nextGuide(guide);
     }
 
     @Override
@@ -107,7 +78,30 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onItemClicked(Reservation reservation) {
-        mGuidance.setLastReservation(reservation);
-        mGuidance.nextGuide(Guide.DecideReply, "返信");
+        mGuidance.setLatestReservation(reservation);
+        mGuidance.nextGuide(Guide.DecideReply, getString(R.string.decide_reply_word));
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.option, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.line_login:
+                new LINELoginPage(this).openLoginPage();
+                break;
+            case R.id.about:
+                new AboutDialogFragment().show(mFM, getString(R.string.app_name));
+                // Toast.makeText(this, TextManager.extractSpeakableChars("abcあいう漢字012漢字"), Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

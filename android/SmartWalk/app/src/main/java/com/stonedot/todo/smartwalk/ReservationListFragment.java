@@ -5,15 +5,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import java.util.Date;
 
 public class ReservationListFragment extends Fragment {
 
@@ -34,7 +30,7 @@ public class ReservationListFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mAdapter.add(item);
+                mAdapter.insert(item, 0);
             }
         });
     }
@@ -49,7 +45,7 @@ public class ReservationListFragment extends Fragment {
         mListView.setOnItemClickListener(onItemClick());
         mListView.setOnItemLongClickListener(onItemLongClick());
 
-        ColorDrawable sage = new ColorDrawable(Color.argb(000, 255, 255, 255));
+        ColorDrawable sage = new ColorDrawable(Color.WHITE);
         mListView.setDivider(sage);
         mListView.setDividerHeight(10);
 
