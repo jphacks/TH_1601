@@ -52,7 +52,13 @@ public class LatestNotificationFragment extends Fragment {
 
     private String formattedTime() {
         Date date = new Date();
-        String format = getActivity().getString(R.string.notification_time_format);
+        String format = "";
+        try {
+            format = getActivity().getString(R.string.notification_time_format);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return date.toString();
+        }
         return new SimpleDateFormat(format).format(date);
     }
 }
