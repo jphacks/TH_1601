@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import com.stonedot.todo.smartwalk.dummy.DummyContent;
 import com.stonedot.todo.smartwalk.dummy.DummyContent.DummyItem;
 
-import java.util.List;
-
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -78,32 +76,17 @@ public class FriendListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
+        mListener = new OnListFragmentInteractionListener() {
+            @Override
+            public void onListFragmentInteraction(DummyItem item) {
+
+            }
+        };
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
     }
 }
