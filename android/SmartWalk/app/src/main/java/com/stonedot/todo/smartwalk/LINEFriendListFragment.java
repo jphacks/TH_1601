@@ -20,11 +20,6 @@ public class LINEFriendListFragment extends Fragment {
     private ListView mListView;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mFragment = inflater.inflate(R.layout.fragment_friend_list, container, false);
         findViews();
