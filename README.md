@@ -109,4 +109,4 @@ Android関連
 
 ### Androidアプリのビルド済みバイナリ
 以下のURLからビルドされたバイナリをダウンロード出来ます。
-https://github.com/jphacks/TH_1601/raw/master/smartwalk.apk
+* https://github.com/jphacks/TH_1601/raw/master/smartwalk.apk
