@@ -1,3 +1,5 @@
+require 'shellwords'
+
 class MessageController < ApplicationController
   def push
     body = request.body.read
@@ -19,19 +21,19 @@ class MessageController < ApplicationController
     end
 
     msg_str = json['message']
+    logger.debug("before process: " + msg_str)
     Dir.chdir("../period_putter") do
-      msg_str = `python3 period_putter.py "#{json['message']}"`
+      msg_str = `python3 period_putter.py #{Shellwords.escape(msg_str)}`
     end
-
+    logger.debug("after process: " + msg_str)
     message = {
       type: 'text',
       text: "#{sender_user.display_name}: #{msg_str}"
     }
+    logger.debug("processed: " + message.to_s)
 
     logger.debug("Start pushing message...")
-
     response = line_client.push_message(receiver, message)
-
     logger.debug(response.code)
     logger.debug(response.body)
 
