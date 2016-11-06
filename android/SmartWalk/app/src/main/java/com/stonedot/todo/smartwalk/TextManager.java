@@ -2,8 +2,11 @@ package com.stonedot.todo.smartwalk;
 
 import android.util.Log;
 
+import java.text.Normalizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.text.Normalizer.Form.NFKC;
 
 /**
  * Created by komatsu on 2016/11/04.
@@ -12,6 +15,7 @@ import java.util.regex.Pattern;
 public class TextManager {
 
     public static String extractSpeakableChars(String text) {
+        String normalizedText = Normalizer.normalize(text, NFKC);
         StringBuilder sb = new StringBuilder();
         Log.d("TextManager", text);
         for(int i = 0; i < text.length(); i++ ){
