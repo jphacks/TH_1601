@@ -55,7 +55,7 @@ class User < ApplicationRecord
                       "inner join users as other " +
                       "on relation.friend_user_id = other.id " +
                       "where other.display_name = ? and " +
-                      "own.mid = ?", display_name, sender_mid]).count
+                      "own.mid = ?", display_name, sender_mid]).first.count
   end
 
   def friend_url()
