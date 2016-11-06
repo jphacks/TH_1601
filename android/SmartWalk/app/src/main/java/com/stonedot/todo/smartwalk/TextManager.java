@@ -15,7 +15,13 @@ import static java.text.Normalizer.Form.NFKC;
 
 public class TextManager {
     private static final Character.UnicodeBlock[] photographBlocks = {
+            Character.UnicodeBlock.DINGBATS,
+            Character.UnicodeBlock.MISCELLANEOUS_TECHNICAL,
+            Character.UnicodeBlock.GEOMETRIC_SHAPES,
+            Character.UnicodeBlock.MISCELLANEOUS_SYMBOLS,
             Character.UnicodeBlock.MISCELLANEOUS_SYMBOLS_AND_PICTOGRAPHS,
+            Character.UnicodeBlock.EMOTICONS,
+            Character.UnicodeBlock.TRANSPORT_AND_MAP_SYMBOLS,
             Character.UnicodeBlock.HIGH_SURROGATES,
             Character.UnicodeBlock.LOW_SURROGATES
     };
