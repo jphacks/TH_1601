@@ -7,14 +7,15 @@ class MessageController < ApplicationController
     receiver = json['receiver']
     unless receiver then
       begin
-        users = User.find_by_sql(["select other.user_id from users as own " +
-                                  "inner join friendships as relation " +
-                                  "on own.id = relation.user_id " +
-                                  "inner join users as other " +
-                                  "on relation.friend_user_id = other.id " +
-                                  "where other.display_name = ? and " +
-                                  "own.mid = ? limit 1", display_name, sender_user_id])
-        receiver = users.first.user_id
+        # users = User.find_by_sql(["select other.user_id from users as own " +
+        #                           "inner join friendships as relation " +
+        #                           "on own.id = relation.user_id " +
+        #                           "inner join users as other " +
+        #                           "on relation.friend_user_id = other.id " +
+        #                           "where other.display_name = ? and " +
+        #                           "own.mid = ? limit 1", display_name, sender_user_id])
+        user = User.select_first_friend_of(sender_user_id, display_name)
+        receiver = user.user_id
 #        receiver = User.find_by(user_id: sender_user_id)
 #                   .friends.find_by(display_name: display_name).take.user_id
       rescue
@@ -41,5 +42,15 @@ class MessageController < ApplicationController
     logger.debug(response.body)
 
     head :ok
+  end
+
+  def can_push()
+    body = request.body.read
+    json = JSON.parse(body)
+    sender_user_id = json['sender']
+    display_name = json['display_name']
+    count = User.count_friends_of(sender_user_id, display_name)
+    result = { "can_push" => count == 1 }
+    render json: result
   end
 end
