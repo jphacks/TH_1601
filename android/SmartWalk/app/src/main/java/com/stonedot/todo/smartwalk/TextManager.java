@@ -3,6 +3,7 @@ package com.stonedot.todo.smartwalk;
 import android.util.Log;
 
 import java.text.Normalizer;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +14,11 @@ import static java.text.Normalizer.Form.NFKC;
  */
 
 public class TextManager {
+    private static final Character.UnicodeBlock[] photographBlocks = {
+            Character.UnicodeBlock.MISCELLANEOUS_SYMBOLS_AND_PICTOGRAPHS,
+            Character.UnicodeBlock.HIGH_SURROGATES,
+            Character.UnicodeBlock.LOW_SURROGATES
+    };
 
     public static String extractSpeakableChars(String text) {
         String normalizedText = Normalizer.normalize(text, NFKC);
@@ -20,8 +26,9 @@ public class TextManager {
         Log.d("TextManager", text);
         for(int i = 0; i < text.length(); i++ ){
             //絵文字じゃなかったら追加
-            if( Character.UnicodeBlock.of( text.charAt( i )) != Character.UnicodeBlock.MISCELLANEOUS_SYMBOLS_AND_PICTOGRAPHS){
-                sb.append( text.charAt(i) );
+            Character.UnicodeBlock ub = Character.UnicodeBlock.of( text.charAt( i ));
+            if( !Arrays.asList(photographBlocks).contains( ub ) ){
+                sb.append( ub );
             }
         }
         return sb.toString();
