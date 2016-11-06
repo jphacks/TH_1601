@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
   # For retreving infromation
   post 'users/friend_list', format: false
-  post 'users/friend_token', format: false
+  post 'users/friend_url', format: false
 
   # For LINE callback
   post 'callback', to: 'callback#callback', format: false
