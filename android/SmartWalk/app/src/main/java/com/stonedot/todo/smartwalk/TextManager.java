@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.text.Normalizer;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +20,10 @@ public class TextManager {
             Character.UnicodeBlock.HIGH_SURROGATES,
             Character.UnicodeBlock.LOW_SURROGATES
     };
+    private static HashMap<String, String> hashMap = new HashMap(){ //デフォルト容量16
+        {put("…", "");}
+        {put("～", "ー");}
+    };
 
     public static String extractSpeakableChars(String text) {
         String normalizedText = Normalizer.normalize(text, NFKC);
@@ -28,8 +33,12 @@ public class TextManager {
             //絵文字じゃなかったら追加
             char c = text.charAt( i );
             Character.UnicodeBlock ub = Character.UnicodeBlock.of( c );
-            if( !Arrays.asList(photographBlocks).contains( ub ) ){
-                sb.append( c );
+            if( !Arrays.asList(photographBlocks).contains( ub ) ) {
+                if( hashMap.keySet().contains( c ) ){
+                    sb.append( hashMap.get( c ) );
+                }else{
+                    sb.append(c);
+                }
             }
         }
         return sb.toString();
