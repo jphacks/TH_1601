@@ -29,6 +29,15 @@ class User < ApplicationRecord
     end
   end
 
+  def self.select_friends_of(sender_mid)
+    User.find_by_sql(["select other.* from users as own " +
+                      "inner join friendships as relation " +
+                      "on own.id = relation.user_id " +
+                      "inner join users as other " +
+                      "on relation.friend_user_id = other.id " +
+                      "where own.mid = ?", sender_mid])
+  end
+
   def self.select_first_friend_of(sender_mid, display_name)
     User.find_by_sql(["select other.* from users as own " +
                       "inner join friendships as relation " +

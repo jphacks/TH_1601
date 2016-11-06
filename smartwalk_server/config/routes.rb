@@ -11,6 +11,9 @@ Rails.application.routes.draw do
   post 'message/push', format: false
   post 'message/can_push', format: false
 
+  # For retreving infromation
+  post 'users/friend_list', format: false
+
   # For LINE callback
   post 'callback', to: 'callback#callback', format: false
 end
