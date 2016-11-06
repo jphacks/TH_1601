@@ -1,6 +1,5 @@
 package com.stonedot.todo.smartwalk;
 
-import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -53,8 +52,10 @@ public class LINELoginPage {
                 default:
                     Log.d("LineFragment", "Line login go something wrong." + future.getProgress().toString());
                     Log.d("LineFragment", "We are trying fallback.");
-                    String mid = RandomStringUtils.randomAlphanumeric(30);
-                    UserDataStorage.putLineMid(mActivity, mid);
+                    if(UserDataStorage.getLineMid(mActivity).isEmpty()) {
+                        String mid = RandomStringUtils.randomAlphanumeric(30);
+                        UserDataStorage.putLineMid(mActivity, mid);
+                    }
                     LINEFriendDialogFragment dialog = new LINEFriendDialogFragment();
                     dialog.show(mActivity.getSupportFragmentManager(), "line_dialog");
                     break;

@@ -41,4 +41,8 @@
     <string name="stt_error_recognizer_busy">音声認識プログラムが使用中です</string>
     <string name="stt_error_server">サーバのエラーです</string>
     <string name="stt_error_speech_timeout">音声入力がありませんでした。</string>
+
+    <string name="lfd_dialog_message">全ての機能を使うためにはSmartWalkと友だちになる必要があります。</string>
+    <string name="lfd_dialog_accept">友だちになる</string>
+    <string name="lfd_dialog_decline">やめる</string>
 </resources>
