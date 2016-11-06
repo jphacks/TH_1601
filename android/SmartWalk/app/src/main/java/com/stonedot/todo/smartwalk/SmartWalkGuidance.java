@@ -1,8 +1,6 @@
 package com.stonedot.todo.smartwalk;
 
 import android.app.Activity;
-import android.util.JsonReader;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +11,6 @@ import java.util.ArrayDeque;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Queue;
 
 import static com.stonedot.todo.smartwalk.Guide.ConfirmReply;
 import static com.stonedot.todo.smartwalk.Guide.ConfirmSend;
@@ -68,7 +65,6 @@ public class SmartWalkGuidance {
 
             case RequestFriend:
                 isFriendRequest(requestFriendCallback);
-                nextGuide(ConfirmReply);
                 break;
 
             case ConfirmReply:
@@ -221,8 +217,8 @@ public class SmartWalkGuidance {
         @Override
         public void responded(int code, String statusMessage, String content) {
             try {
-                JSONObject json = new JSONObject(content).getJSONObject("can_push");
-                if(json != null && json.getBoolean("can_push")) nextGuide(ConfirmReply);
+                boolean canPush = new JSONObject(content).getBoolean("can_push");
+                if(canPush) nextGuide(ConfirmReply);
                 else mTTS.textToSpeech(t(R.string.guide_be_friend_to_reply), Finish);
             } catch (JSONException e) {
                 e.printStackTrace();

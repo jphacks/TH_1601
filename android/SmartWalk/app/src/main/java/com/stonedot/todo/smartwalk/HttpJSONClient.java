@@ -45,8 +45,8 @@ public class HttpJSONClient extends AsyncTask<Void, Void, HttpJSONClient.Respons
         this.sendData = new JSONObject(data).toString();
     }
 
-    public void post(Responded responceCallback) {
-        this.responseCallback = responceCallback;
+    public void post(Responded responseCallback) {
+        this.responseCallback = responseCallback;
         execute();
     }
 
