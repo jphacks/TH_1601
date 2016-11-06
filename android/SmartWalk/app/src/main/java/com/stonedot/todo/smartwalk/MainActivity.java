@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private LINEBroadcastReceiver mLINEReceiver;
 
-    private static String fileName = "settings";
     private static String[] keys = {"is_not_read"};
 
     @Override
@@ -36,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         //preferenceによる読み込み
-        SharedPreferences pref = getSharedPreferences(fileName, MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences(getString(R.string.setting_file), MODE_PRIVATE);
         boolean isNotRead = pref.getBoolean(keys[0], false);
 
         // フラグメント関係

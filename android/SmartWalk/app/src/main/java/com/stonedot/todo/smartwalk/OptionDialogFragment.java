@@ -16,7 +16,6 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class OptionDialogFragment extends DialogFragment {
-    private static String fileName = "settings";
     private static String[] keys = {"is_not_read"};
 
     @Override
@@ -30,7 +29,7 @@ public class OptionDialogFragment extends DialogFragment {
             public void onClick(View v) {
                CheckBox checkBox = (CheckBox) v;
                boolean checked = checkBox.isChecked();
-               SharedPreferences prefer = getContext().getSharedPreferences(fileName, MODE_PRIVATE);
+               SharedPreferences prefer = getContext().getSharedPreferences(getString(R.string.setting_file), MODE_PRIVATE);
                SharedPreferences.Editor editor = prefer.edit();
                editor.putBoolean(keys[0], checked);
                editor.commit();
