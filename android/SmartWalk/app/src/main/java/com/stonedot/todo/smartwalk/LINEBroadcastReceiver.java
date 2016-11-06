@@ -87,6 +87,7 @@ public class LINEBroadcastReceiver {
         String[] split = mContent.split(SMART_WALK_SEPARATOR);
         StringBuilder builder = new StringBuilder();
         mSender = split[0];
+        split[0] = "";
         for(String str : split)builder.append(str);
         mContent = builder.toString();
     }
