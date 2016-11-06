@@ -1,6 +1,7 @@
 package com.stonedot.todo.smartwalk;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -85,18 +86,22 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
+    private void addFragment(Fragment fragment) {
+        FragmentTransaction transaction = mFM.beginTransaction();
+        transaction.add(R.id.main_screen, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+        mFM.executePendingTransactions();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.line_login:
                 new LINELoginPage(this).openLoginPage();
                 break;
-            case R.id.friend_list:
-                FragmentTransaction transaction = mFM.beginTransaction();
-                transaction.replace(R.id.main_screen, new FriendListFragment());
-                transaction.addToBackStack(null);
-                transaction.commit();
-                mFM.executePendingTransactions();
+            case R.id.line_friend_list:
+                addFragment(new LINEFriendListFragment());
                 break;
             case R.id.about:
                 new AboutDialogFragment().show(mFM, getString(R.string.app_name));
