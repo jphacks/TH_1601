@@ -29,7 +29,7 @@ class User < ApplicationRecord
     end
   end
 
-  def self.select_first_friend_of(sender_uesr_id, display_name)
+  def self.select_first_friend_of(sender_user_id, display_name)
     User.find_by_sql(["select other.* from users as own " +
                       "inner join friendships as relation " +
                       "on own.id = relation.user_id " +
@@ -39,7 +39,7 @@ class User < ApplicationRecord
                       "own.mid = ? limit 1", display_name, sender_user_id]).first
   end
 
-  def self.count_friends_of(sender_uesr_id, display_name)
+  def self.count_friends_of(sender_user_id, display_name)
     User.find_by_sql(["select count(*) from users as own " +
                       "inner join friendships as relation " +
                       "on own.id = relation.user_id " +
