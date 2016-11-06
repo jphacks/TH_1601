@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Date;
 import java.util.Formatter;
@@ -19,7 +21,7 @@ public class LINEBroadcastReceiver {
 
     public final String SENDER_NAME_LINE = "LINE";
     public final String SENDER_NAME_SMART_WALK = "SmartWalk";
-    public final String SMART_WALK_SEPARATOR = ";";
+    public final String SMART_WALK_SEPARATOR = ":";
 
     private AppCompatActivity mActivity;
     private SmartWalkGuidance mGuidance;
