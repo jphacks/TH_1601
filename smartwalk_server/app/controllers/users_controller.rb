@@ -32,6 +32,6 @@ class UsersController < ApplicationController
                     "picture_url" => user.picture_url
                   })
     end
-    result
+    render json: result
   end
 end
