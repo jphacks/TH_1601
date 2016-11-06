@@ -43,6 +43,7 @@ class MessageController < ApplicationController
     sender_mid = json['sender']
     display_name = json['display_name']
     count = User.count_friends_of(sender_mid, display_name)
+    logger.debug("count: " + count)
     result = { "can_push" => count == 1 }
     render json: result
   end
