@@ -62,6 +62,7 @@ public class LINEBroadcastReceiver {
         if(mSender.equals(SMART_WALK_SENDER_NAME)) receiveSmartWalkMessage();
 
         mGuidance.setLatestReservation(new Reservation(SNS.LINE, mSender, mContent, new Date()));
+        if(!mGuidance.isWorking()) mGuidance.cancelGuide();
         mGuidance.nextGuide(Guide.Notification, text);
 
         mLINEFragment.displayLatestNotification(SNS.LINE, mSender, mContent);

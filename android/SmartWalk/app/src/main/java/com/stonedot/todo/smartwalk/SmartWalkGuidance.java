@@ -5,9 +5,11 @@ import android.util.Log;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayDeque;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
 
 import static com.stonedot.todo.smartwalk.Guide.ConfirmReply;
 import static com.stonedot.todo.smartwalk.Guide.ConfirmSend;
@@ -15,6 +17,7 @@ import static com.stonedot.todo.smartwalk.Guide.DecideReply;
 import static com.stonedot.todo.smartwalk.Guide.Finish;
 import static com.stonedot.todo.smartwalk.Guide.GetAnswerConfirmReply;
 import static com.stonedot.todo.smartwalk.Guide.GetAnswerConfirmSend;
+import static com.stonedot.todo.smartwalk.Guide.Notification;
 import static com.stonedot.todo.smartwalk.Guide.RepeatReply;
 import static com.stonedot.todo.smartwalk.Guide.Reserve;
 import static com.stonedot.todo.smartwalk.Guide.Send;
@@ -35,6 +38,8 @@ public class SmartWalkGuidance {
     private TextToSpeechManager mTTS;
     private SpeechToTextManager mSTT;
     private Reservation latestReservation;
+    private ArrayDeque<String> notificationQueue = new ArrayDeque<>();
+    private boolean isWorking = false;
     private String mMessage;
 
     public SmartWalkGuidance(Activity activity, GuidanceListener listener, TextToSpeechManager tts, SpeechToTextManager sst) {
@@ -48,14 +53,18 @@ public class SmartWalkGuidance {
 
     public void nextGuide(Guide guide, String text) {
         if(guide == null) return;
-        Log.d("nextGuide", guide.toString());
+        if(!(isNotificationQueueEmpty() || guide == Notification || guide == ConfirmReply)) return;
+
         switch (guide) {
             case Notification:
+                notificationQueue.add(text);
                 mTTS.textToSpeech(text, ConfirmReply);
                 break;
 
             case ConfirmReply:
-                // 通知を最後まで読み切っていること
+                notificationQueue.remove();
+                if(!isNotificationQueueEmpty()) break;
+                isWorking = true;
                 mTTS.textToSpeech(t(R.string.guide_confirm_reply), GetAnswerConfirmReply);
                 break;
 
@@ -68,6 +77,7 @@ public class SmartWalkGuidance {
                     mTTS.textToSpeech(t(R.string.guide_reserve), Reserve);
                     break;
                 }
+                isWorking = true;
                 mTTS.textToSpeech(t(R.string.guide_input_message), StartReply);
                 break;
 
@@ -107,9 +117,11 @@ public class SmartWalkGuidance {
                 break;
 
             case Finish:
+                isWorking = false;
                 break;
 
             case Reserve:
+                isWorking = false;
                 reserve();
                 break;
 
@@ -118,6 +130,7 @@ public class SmartWalkGuidance {
                 break;
 
             default:
+                isWorking = false;
                 break;
         }
     }
@@ -126,13 +139,18 @@ public class SmartWalkGuidance {
         nextGuide(guide, "");
     }
 
+    public boolean isNotificationQueueEmpty() {
+        return notificationQueue.size() == 0;
+    }
+
+    public boolean isWorking() {
+        return isWorking;
+    }
+
     public void cancelGuide() {
         mTTS.cancel();
         mSTT.cancel();
-    }
-
-    public void notificationWhileGuidance() {
-
+        isWorking = false;
     }
 
     private String t(int stringId) {
