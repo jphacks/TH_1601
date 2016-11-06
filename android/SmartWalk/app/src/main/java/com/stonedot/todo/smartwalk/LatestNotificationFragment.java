@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -54,7 +52,7 @@ public class LatestNotificationFragment extends Fragment {
 
     private String formattedTime() {
         Date date = new Date();
-        String format = getString(R.string.notification_time_format);
+        String format = getActivity().getString(R.string.notification_time_format);
         return new SimpleDateFormat(format).format(date);
     }
 }
