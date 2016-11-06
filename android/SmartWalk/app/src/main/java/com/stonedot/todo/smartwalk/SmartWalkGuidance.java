@@ -2,6 +2,7 @@ package com.stonedot.todo.smartwalk;
 
 import android.app.Activity;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -186,6 +187,7 @@ public class SmartWalkGuidance {
             e.printStackTrace();
             return false;
         }
+        
         Map<String, String> sendData = new HashMap<String, String>() {
             {
                 put("display_name", latestReservation.getSender());

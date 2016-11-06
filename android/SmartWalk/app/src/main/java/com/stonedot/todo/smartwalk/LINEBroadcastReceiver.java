@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Date;
 import java.util.Formatter;
@@ -19,7 +21,7 @@ public class LINEBroadcastReceiver {
 
     public final String SENDER_NAME_LINE = "LINE";
     public final String SENDER_NAME_SMART_WALK = "SmartWalk";
-    public final String SMART_WALK_SEPARATOR = ";";
+    public final String SMART_WALK_SEPARATOR = ":";
 
     private AppCompatActivity mActivity;
     private SmartWalkGuidance mGuidance;
@@ -54,13 +56,14 @@ public class LINEBroadcastReceiver {
     };
 
     private void receiveNotification() {
+        if(mSender.equals(SENDER_NAME_SMART_WALK)) receiveSmartWalkMessage();
+        if(mSender.equals(SENDER_NAME_LINE)) return;
+
         Formatter fm = new Formatter();
         fm.format(mActivity.getString(R.string.line_sender_format) + mContent, mSender);
         String text = fm.toString();
 
         if(isSameNotification(text)) return;
-        if(mSender.equals(SENDER_NAME_SMART_WALK)) receiveSmartWalkMessage();
-        if(mSender.equals(SENDER_NAME_LINE)) return;
 
         mGuidance.setLatestReservation(new Reservation(SNS.LINE, mSender, mContent, new Date()));
         if(mGuidance.isWorking()) mGuidance.cancelGuide();
@@ -84,6 +87,7 @@ public class LINEBroadcastReceiver {
         String[] split = mContent.split(SMART_WALK_SEPARATOR);
         StringBuilder builder = new StringBuilder();
         mSender = split[0];
+        split[0] = "";
         for(String str : split)builder.append(str);
         mContent = builder.toString();
     }

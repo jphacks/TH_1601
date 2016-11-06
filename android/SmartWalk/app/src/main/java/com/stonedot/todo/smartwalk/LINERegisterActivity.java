@@ -46,7 +46,7 @@ public class LINERegisterActivity extends Activity {
                             Toast toast = Toast.makeText(getApplicationContext(), R.string.line_register_completed, Toast.LENGTH_LONG);
                             toast.show();
                         } else {
-                            Toast toast = Toast.makeText(getApplicationContext(), R.string.line_register_failed, Toast.LENGTH_LONG);
+                            Toast toast = Toast.makeText(getApplicationContext(), R.string.line_friend_register_failed, Toast.LENGTH_LONG);
                             toast.show();
                         }
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
