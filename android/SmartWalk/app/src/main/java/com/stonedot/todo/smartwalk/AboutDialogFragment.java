@@ -10,6 +10,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 /**
  * Created by komatsu on 2016/11/03.
  */
