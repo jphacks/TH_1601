@@ -17,7 +17,8 @@ import java.util.Formatter;
 
 public class LINEBroadcastReceiver {
 
-    public final String SMART_WALK_SENDER_NAME = "SmartWalk";
+    public final String SENDER_NAME_LINE = "LINE";
+    public final String SENDER_NAME_SMART_WALK = "SmartWalk";
     public final String SMART_WALK_SEPARATOR = ";";
 
     private AppCompatActivity mActivity;
@@ -58,8 +59,8 @@ public class LINEBroadcastReceiver {
         String text = fm.toString();
 
         if(isSameNotification(text)) return;
-
-        if(mSender.equals(SMART_WALK_SENDER_NAME)) receiveSmartWalkMessage();
+        if(mSender.equals(SENDER_NAME_SMART_WALK)) receiveSmartWalkMessage();
+        if(mSender.equals(SENDER_NAME_LINE)) return;
 
         mGuidance.setLatestReservation(new Reservation(SNS.LINE, mSender, mContent, new Date()));
         if(mGuidance.isWorking()) mGuidance.cancelGuide();
