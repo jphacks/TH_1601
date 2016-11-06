@@ -12,8 +12,6 @@ class MessageController < ApplicationController
       begin
         user = User.select_first_friend_of(sender_mid, display_name)
         receiver = user.user_id
-#        receiver = User.find_by(user_id: sender_user_id)
-#                   .friends.find_by(display_name: display_name).take.user_id
       rescue
         logger.debug("Cannot determine receiver")
         return head :bad_request
