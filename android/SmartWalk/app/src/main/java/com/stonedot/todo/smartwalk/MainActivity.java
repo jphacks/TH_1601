@@ -1,5 +1,6 @@
 package com.stonedot.todo.smartwalk;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -26,10 +27,17 @@ public class MainActivity extends AppCompatActivity implements
 
     private LINEBroadcastReceiver mLINEReceiver;
 
+    private static String fileName = "settings";
+    private static String[] keys = {"is_not_read"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //preferenceによる読み込み
+        SharedPreferences pref = getSharedPreferences(fileName, MODE_PRIVATE);
+        boolean isNotRead = pref.getBoolean(keys[0], false);
 
         // フラグメント関係
         mFM = getSupportFragmentManager();
