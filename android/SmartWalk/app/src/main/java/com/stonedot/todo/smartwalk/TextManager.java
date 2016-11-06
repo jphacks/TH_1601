@@ -26,9 +26,10 @@ public class TextManager {
         Log.d("TextManager", text);
         for(int i = 0; i < text.length(); i++ ){
             //絵文字じゃなかったら追加
-            Character.UnicodeBlock ub = Character.UnicodeBlock.of( text.charAt( i ));
+            char c = text.charAt( i );
+            Character.UnicodeBlock ub = Character.UnicodeBlock.of( c );
             if( !Arrays.asList(photographBlocks).contains( ub ) ){
-                sb.append( ub );
+                sb.append( c );
             }
         }
         return sb.toString();
