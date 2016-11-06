@@ -24,14 +24,15 @@ class UsersController < ApplicationController
     json = JSON.parse(body)
     user_mid = json['mid']
     users = User.select_friends_of(user_mid)
-    result = []
+    user_list = []
     users.each do |user|
-      result.push({
-                    "display_name" => user.display_name,
-                    "user_id" => user.user_id,
-                    "picture_url" => user.picture_url
-                  })
+      user_list.push({
+                       "display_name" => user.display_name,
+                       "user_id" => user.user_id,
+                       "picture_url" => user.picture_url
+                     })
     end
+    result = { "friend_list" => user_list }
     render json: result
   end
 
