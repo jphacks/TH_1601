@@ -43,7 +43,7 @@ public class SpeechToTextManager {
 
     public void shutdown() {
         if(mSTT == null) return;
-        mSTT.cancel();
+        cancel();
         mSTT.destroy();
     }
 }

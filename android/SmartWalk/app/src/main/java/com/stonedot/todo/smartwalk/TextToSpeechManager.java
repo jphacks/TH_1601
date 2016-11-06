@@ -51,8 +51,7 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
     }
 
     public void cancel() {
-        if (mTTS == null) return;
-        if (mTTS.isSpeaking()) mTTS.stop();
+        if (mTTS != null) mTTS.stop();
     }
 
     public void shutdown() {

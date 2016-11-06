@@ -37,12 +37,6 @@ public class SmartWalkGuidance {
     private Reservation latestReservation;
     private String mMessage;
 
-    private boolean mIsWorking = true;
-
-    public boolean isWorking() {
-        return mIsWorking;
-    }
-
     public SmartWalkGuidance(Activity activity, GuidanceListener listener, TextToSpeechManager tts, SpeechToTextManager sst) {
         mActivity = activity;
         mListener = listener;
@@ -52,41 +46,16 @@ public class SmartWalkGuidance {
 
     public void setLatestReservation(Reservation reservation) { latestReservation = reservation; }
 
-    private void reserve() {
-        if(mListener == null) return;
-        mListener.onReserve(latestReservation);
-    }
-
-    private boolean send() {
-        URL url = null;
-        try {
-            url = new URL("https://smartwalk.stonedot.com/message/push");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        Map<String, String> sendData = new HashMap<String, String>() {
-            {
-                put("display_name", latestReservation.getSender());
-                put("sender", UserDataStorage.getLineMid(mActivity.getBaseContext()));
-                put("message", mMessage);
-            }
-        };
-        HttpJSONClient http = new HttpJSONClient(url, sendData);
-        http.post(null);
-        return true;
-    }
-
     public void nextGuide(Guide guide, String text) {
         if(guide == null) return;
         Log.d("nextGuide", guide.toString());
         switch (guide) {
-            case LINENotification:
+            case Notification:
                 mTTS.textToSpeech(text, ConfirmReply);
                 break;
 
             case ConfirmReply:
-                mIsWorking = true;
+                // 通知を最後まで読み切っていること
                 mTTS.textToSpeech(t(R.string.guide_confirm_reply), GetAnswerConfirmReply);
                 break;
 
@@ -99,7 +68,6 @@ public class SmartWalkGuidance {
                     mTTS.textToSpeech(t(R.string.guide_reserve), Reserve);
                     break;
                 }
-                mIsWorking = true;
                 mTTS.textToSpeech(t(R.string.guide_input_message), StartReply);
                 break;
 
@@ -132,24 +100,21 @@ public class SmartWalkGuidance {
                     break;
                 }
                 if(!send()) {
-                    mTTS.textToSpeech(t(R.string.guide_send_failed), StartReply);
+                    mTTS.textToSpeech(t(R.string.guide_send_failed), Finish);
                     break;
                 }
                 mTTS.textToSpeech(t(R.string.guide_send_message), Finish);
                 break;
 
             case Finish:
-                mIsWorking = false;
                 break;
 
             case Reserve:
                 reserve();
-                mIsWorking = false;
                 break;
 
             case Failed:
                 mTTS.textToSpeech(t(R.string.guide_input_speech_failed), Finish);
-                mIsWorking = false;
                 break;
 
             default:
@@ -157,12 +122,45 @@ public class SmartWalkGuidance {
         }
     }
 
-    private String t(int stringId) {
-        return mActivity.getString(stringId);
+    public void nextGuide(Guide guide) {
+        nextGuide(guide, "");
     }
 
     public void cancelGuide() {
         mTTS.cancel();
         mSTT.cancel();
+    }
+
+    public void notificationWhileGuidance() {
+
+    }
+
+    private String t(int stringId) {
+        return mActivity.getString(stringId);
+    }
+
+    private void reserve() {
+        if(mListener == null) return;
+        mListener.onReserve(latestReservation);
+    }
+
+    private boolean send() {
+        URL url = null;
+        try {
+            url = new URL("https://smartwalk.stonedot.com/message/push");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        Map<String, String> sendData = new HashMap<String, String>() {
+            {
+                put("display_name", latestReservation.getSender());
+                put("sender", UserDataStorage.getLineMid(mActivity.getBaseContext()));
+                put("message", mMessage);
+            }
+        };
+        HttpJSONClient http = new HttpJSONClient(url, sendData);
+        http.post(null);
+        return true;
     }
 }

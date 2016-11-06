@@ -29,7 +29,7 @@
 
         <fragment
             android:id="@+id/fragment_line"
-            android:name="com.stonedot.todo.smartwalk.LINEFragment"
+            android:name="com.stonedot.todo.smartwalk.LatestNotificationFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:layout="@layout/fragment_line">

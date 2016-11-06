@@ -6,7 +6,7 @@
     <string name="latest_notification">最新の通知</string>
     <string name="reserved_notification">保留された通知\n(タップで返信/長押しで削除)</string>
     <string name="no_notification">最新の通知はありません。</string>
-    <string name="line_sender_format">%sさんからのラインの通知です。%s</string>
+    <string name="line_sender_format">%sさんからのラインの通知です。</string>
 
     <string name="decide_reply_word">返信</string>
     <string name="decide_send_word">送信</string>
@@ -22,12 +22,11 @@
     <string name="guide_input_message_repeat_format">返信メッセージは、%s、です</string>
     <string name="guide_confirm_send">「送信」と言うと送信します</string>
     <string name="guide_input_message_again">メッセージを再入力してください</string>
-    <string name="guide_send_failed">メッセージの送信に失敗しました、メッセージを再入力してください</string>
+    <string name="guide_send_failed">メッセージの送信に失敗しました</string>
     <string name="guide_send_message">メッセージを送信しました</string>
     <string name="guide_input_speech_failed">音声認識に失敗しました</string>
 
     <string name="input_speech">音声を入力</string>
-
     <string name="tts_error_init">初期化エラーが発生しました</string>
     <string name="tts_error_language">言語選択エラーが発生しました</string>
 
