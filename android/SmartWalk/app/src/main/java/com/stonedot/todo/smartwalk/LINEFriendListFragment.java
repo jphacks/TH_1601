@@ -46,12 +46,17 @@ public class LINEFriendListFragment extends Fragment {
     }
 
     private void makeList(Activity activity) {
-        LINEFriendListAdapter adapter = new LINEFriendListAdapter(activity.getApplicationContext());
-        adapter.addAll(friendList());
-        mListView.setAdapter(adapter);
+        friendList(new ItemAdder() {
+            @Override
+            public void ItemAdded(ArrayList<ItemPair> array) {
+                LINEFriendListAdapter adapter = new LINEFriendListAdapter(activity.getApplicationContext());
+                adapter.addAll(array);
+                mListView.setAdapter(adapter);
+            }
+        });
     }
 
-    class ItemPair {
+    public class ItemPair {
         public String mImageUrl;
         public String mDisplayName;
         public ItemPair(String displayName, String imageUrl) {
@@ -60,17 +65,12 @@ public class LINEFriendListFragment extends Fragment {
         }
     }
 
-    interface ItemAdder {
-        public void ItemAdded(ItemPair pair);
+    public interface ItemAdder {
+        void ItemAdded(ArrayList<ItemPair> array);
     }
 
     private static final String FriendListEndpoint = "https://smartwalk.stonedot.com/users/friend_list";
     private void friendList(ItemAdder callback) {
-        ArrayList<String> resultList = new ArrayList<String>();
-        resultList.add("Pen");
-        resultList.add("PineApple");
-        resultList.add("Apple");
-        resultList.add("Pen");
         HashMap<String, String> sendData = new HashMap<String, String>() {
             {
                 put("mid", UserDataStorage.getLineMid(getActivity()));
@@ -85,13 +85,15 @@ public class LINEFriendListFragment extends Fragment {
                     try {
                         JSONObject json = new JSONObject(content);
                         JSONArray friends = json.getJSONArray("friend_list");
+                        ArrayList<ItemPair> array = new ArrayList<ItemPair>();
                         for(int i = 0; i < friends.length(); i++) {
                             JSONObject friend = friends.getJSONObject(i);
-                            if(callback != null) {
-                                String displayName = friend.getString("display_name");
-                                String pictureUrl = friend.getString("picture_url");
-                                callback.ItemAdded(new ItemPair(displayName, pictureUrl));
-                            }
+                            String displayName = friend.getString("display_name");
+                            String pictureUrl = friend.getString("picture_url");
+                            array.add(new ItemPair(displayName, pictureUrl));
+                        }
+                        if(callback != null) {
+                            callback.ItemAdded(array);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
