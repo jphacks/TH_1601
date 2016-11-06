@@ -187,6 +187,7 @@ public class SmartWalkGuidance {
             e.printStackTrace();
             return false;
         }
+        
         Map<String, String> sendData = new HashMap<String, String>() {
             {
                 put("display_name", latestReservation.getSender());
