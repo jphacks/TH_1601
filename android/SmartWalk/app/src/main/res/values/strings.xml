@@ -18,7 +18,7 @@
     <string name="guide_confirm_reply">「返信」と言うと返信します</string>
     <string name="guide_reserve">保留されます</string>
     <string name="guide_input_message">メッセージを入力してください</string>
-    <string name="guide_input_message_failed">メッセージの取得に失敗しました</string>
+    <string name="guide_input_message_failed">メッセージが入力されませんでした</string>
     <string name="guide_input_message_repeat_format">返信メッセージは、%s、です</string>
     <string name="guide_confirm_send">「送信」と言うと送信します</string>
     <string name="guide_input_message_again">メッセージを再入力してください</string>
