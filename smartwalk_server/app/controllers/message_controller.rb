@@ -20,9 +20,9 @@ class MessageController < ApplicationController
 
     msg_str = json['message']
     logger.debug("before process: " + msg_str)
-    #Dir.chdir("../period_putter") do
-    #  msg_str = `python3 period_putter.py "#{msg_str}"`
-    #end
+    Dir.chdir("../period_putter") do
+      msg_str = `python3 period_putter.py #{Shellwords.escape(msg_str)}`
+    end
     logger.debug("after process: " + msg_str)
     message = {
       type: 'text',
