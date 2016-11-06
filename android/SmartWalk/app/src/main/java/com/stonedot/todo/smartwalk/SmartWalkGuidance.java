@@ -1,6 +1,7 @@
 package com.stonedot.todo.smartwalk;
 
 import android.app.Activity;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,7 +69,9 @@ public class SmartWalkGuidance {
                 break;
 
             case ConfirmReply:
+                Log.d("Guidance", "ConfirmReply");
                 notificationQueue.remove();
+                Log.d("Guidance", notificationQueue.toString());
                 if(!isNotificationQueueEmpty()) break;
                 isWorking = true;
                 mTTS.textToSpeech(t(R.string.guide_confirm_reply), GetAnswerConfirmReply);
@@ -217,9 +220,13 @@ public class SmartWalkGuidance {
         @Override
         public void responded(int code, String statusMessage, String content) {
             try {
+                Log.d("Guidance", "Responded");
                 boolean canPush = new JSONObject(content).getBoolean("can_push");
                 if(canPush) nextGuide(ConfirmReply);
-                else mTTS.textToSpeech(t(R.string.guide_be_friend_to_reply), Finish);
+                else {
+                    notificationQueue.remove();
+                    mTTS.textToSpeech(t(R.string.guide_be_friend_to_reply), Finish);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
