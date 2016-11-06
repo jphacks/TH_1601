@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.about:
                 new AboutDialogFragment().show(mFM, getString(R.string.app_name));
-                // Toast.makeText(this, TextManager.extractSpeakableChars("abcあいう漢字012漢字"), Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

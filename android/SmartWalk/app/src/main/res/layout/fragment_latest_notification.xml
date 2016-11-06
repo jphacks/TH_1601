@@ -13,6 +13,14 @@
         android:background="@drawable/list_frame"
         android:padding="10dp">
 
+        <TextView
+            android:id="@+id/no_latest_notification"
+            android:layout_width="match_parent"
+            android:layout_height="82dp"
+            android:gravity="center"
+            android:text="@string/no_notification"
+            android:textSize="16sp"/>
+
         <ImageView
             android:id="@+id/latest_sns_image"
             android:layout_width="72dp"
@@ -24,7 +32,6 @@
             android:layout_height="24dp"
             android:layout_toRightOf="@id/latest_sns_image"
             android:textColor="#777"
-            android:text="@string/no_notification"
             android:textSize="16sp" />
 
         <TextView
@@ -34,7 +41,6 @@
             android:layout_toRightOf="@id/latest_sns_image"
             android:layout_below="@id/latest_sender"
             android:textColor="#777"
-            android:text=""
             android:textSize="12sp" />
 
         <TextView
@@ -45,7 +51,6 @@
             android:layout_below="@id/latest_content"
             android:gravity="right"
             android:textColor="#777"
-            android:text=""
             android:textSize="12sp" />
 
     </RelativeLayout>

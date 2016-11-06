@@ -47,7 +47,7 @@ public class TextToSpeechManager implements TextToSpeech.OnInitListener {
         if (mTTS == null || text.length() <= 0 || !mInitCompletedFlag) return;
         HashMap<String, String> parameter = new HashMap<String, String>();
         parameter.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, guide.toString());
-        mTTS.speak(text, TextToSpeech.QUEUE_ADD, parameter);
+        mTTS.speak(TextManager.extractSpeakableChars(text), TextToSpeech.QUEUE_ADD, parameter);
     }
 
     public void cancel() {

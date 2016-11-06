@@ -2,42 +2,51 @@ package com.stonedot.todo.smartwalk;
 
 import android.util.Log;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.text.Normalizer;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Set;
+
+import static java.text.Normalizer.Form.NFKC;
 
 /**
  * Created by komatsu on 2016/11/04.
  */
 
 public class TextManager {
-
-    public static final String MATCH_EISUU = "a-zA-Z0-9";
-    public static final String MATCH_HIRAGANA = "\u3041-\u3096";
-    public static final String MATCH_KATAKANA = "\u30A1-\u30FA";
-    public static final String MATCH_KANJI = "一-龠";
+    private static final Character.UnicodeBlock[] photographBlocks = {
+            Character.UnicodeBlock.DINGBATS,
+            Character.UnicodeBlock.MISCELLANEOUS_TECHNICAL,
+            Character.UnicodeBlock.GEOMETRIC_SHAPES,
+            Character.UnicodeBlock.MISCELLANEOUS_SYMBOLS,
+            Character.UnicodeBlock.MISCELLANEOUS_SYMBOLS_AND_PICTOGRAPHS,
+            Character.UnicodeBlock.EMOTICONS,
+            Character.UnicodeBlock.TRANSPORT_AND_MAP_SYMBOLS,
+            Character.UnicodeBlock.HIGH_SURROGATES,
+            Character.UnicodeBlock.LOW_SURROGATES
+    };
+    private static HashMap<String, String> hashMap = new HashMap(){ //デフォルト容量16
+        {put("…", "");}
+        {put("～", "ー");}
+    };
+    private static Set<String> keys = hashMap.keySet();
 
     public static String extractSpeakableChars(String text) {
-        Pattern p = Pattern.compile(allowRegex());
-        Matcher m = p.matcher(text);
-        StringBuilder builder = new StringBuilder();
-        while (m.find())  {
-            if (BuildConfig.DEBUG) Log.d("TextManager", m.group());
-            builder.append(m.group());
+        String normalizedText = Normalizer.normalize(text, NFKC);
+        StringBuilder sb = new StringBuilder();
+        Log.d("TextManager", text);
+        for(int i = 0; i < text.length(); i++ ){
+            //絵文字じゃなかったら追加
+            char c = text.charAt( i );
+            Character.UnicodeBlock ub = Character.UnicodeBlock.of( c );
+            if( !Arrays.asList(photographBlocks).contains( ub ) ) {
+                if( keys.contains( String.valueOf(c) ) ){
+                    sb.append( hashMap.get( String.valueOf(c) ) );
+                }else{
+                    sb.append(c);
+                }
+            }
         }
-        return builder.toString();
-    }
-
-    private static String allowRegex() {
-        return toMatchRegex(
-                MATCH_EISUU,
-                MATCH_HIRAGANA,
-                MATCH_KATAKANA
-        );
-    }
-
-    private static String toMatchRegex(String... codes) {
-        StringBuilder builder = new StringBuilder();
-        for(String code : codes) builder.append(code);
-        return "[" + builder.toString() + "]+";
+        return sb.toString();
     }
 }

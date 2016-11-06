@@ -16,9 +16,10 @@
     <string name="line_register_failed">LINEの登録に失敗しました。</string>
 
     <string name="guide_confirm_reply">「返信」と言うと返信します</string>
+    <string name="guide_be_friend_to_reply">返信するには、スマートウォークで友達登録を行ってください</string>
     <string name="guide_reserve">保留されます</string>
     <string name="guide_input_message">メッセージを入力してください</string>
-    <string name="guide_input_message_failed">メッセージの取得に失敗しました</string>
+    <string name="guide_input_message_failed">メッセージが入力されませんでした</string>
     <string name="guide_input_message_repeat_format">返信メッセージは、%s、です</string>
     <string name="guide_confirm_send">「送信」と言うと送信します</string>
     <string name="guide_input_message_again">メッセージを再入力してください</string>
@@ -41,4 +42,8 @@
     <string name="stt_error_recognizer_busy">音声認識プログラムが使用中です</string>
     <string name="stt_error_server">サーバのエラーです</string>
     <string name="stt_error_speech_timeout">音声入力がありませんでした。</string>
+
+    <string name="lfd_dialog_message">全ての機能を使うためにはSmartWalkと友だちになる必要があります。</string>
+    <string name="lfd_dialog_accept">友だちになる</string>
+    <string name="lfd_dialog_decline">やめる</string>
 </resources>
