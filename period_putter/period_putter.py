@@ -94,7 +94,6 @@ class Period_putter():
 
 		ret_string = ""
 		len_form = len(form_list)
-		print(self.pos_list)
 		for i, c in enumerate(classes):
 			if i != 0 and (c == 1.0 or self.pos_list[i-1] == "終助詞" or self.pos_list[i] == "undef"):
 				ret_string += "。"
