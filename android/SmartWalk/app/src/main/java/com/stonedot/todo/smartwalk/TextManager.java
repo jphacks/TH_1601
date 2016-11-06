@@ -40,8 +40,8 @@ public class TextManager {
             char c = text.charAt( i );
             Character.UnicodeBlock ub = Character.UnicodeBlock.of( c );
             if( !Arrays.asList(photographBlocks).contains( ub ) ) {
-                if( keys.contains( c ) ){
-                    sb.append( hashMap.get( c ) );
+                if( keys.contains( String.valueOf(c) ) ){
+                    sb.append( hashMap.get( String.valueOf(c) ) );
                 }else{
                     sb.append(c);
                 }
