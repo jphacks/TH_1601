@@ -97,6 +97,9 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.about:
                 new AboutDialogFragment().show(mFM, getString(R.string.app_name));
                 break;
+            case R.id.settings:
+                new AboutDialogFragment().show(mFM, getString(R.string.app_name));
+                break;
             default:
                 break;
         }
