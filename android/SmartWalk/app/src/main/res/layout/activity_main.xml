@@ -32,7 +32,7 @@
             android:name="com.stonedot.todo.smartwalk.LatestNotificationFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_line">
+            tools:layout="@layout/fragment_latest_notification">
         </fragment>
 
         <TextView

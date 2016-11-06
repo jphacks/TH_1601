@@ -21,7 +21,7 @@ public class LatestNotificationFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mFragment = inflater.inflate(R.layout.fragment_line, container, false);
+        mFragment = inflater.inflate(R.layout.fragment_latest_notification, container, false);
         findViews();
         return mFragment;
     }
