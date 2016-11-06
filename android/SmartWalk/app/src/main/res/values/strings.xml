@@ -46,4 +46,8 @@
     <string name="lfd_dialog_message">全ての機能を使うためにはSmartWalkと友だちになる必要があります。</string>
     <string name="lfd_dialog_accept">友だちになる</string>
     <string name="lfd_dialog_decline">やめる</string>
+
+    <string name="line_friend_register_completed">友達登録が完了しました</string>
+    <string name="line_friend_register_no_need">友達登録の必要がありません</string>
+    <string name="line_friend_register_failed">友達登録に失敗しました</string>
 </resources>

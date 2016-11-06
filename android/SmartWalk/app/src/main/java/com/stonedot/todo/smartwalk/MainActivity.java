@@ -1,14 +1,13 @@
 package com.stonedot.todo.smartwalk;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
-import java.util.Date;
-import java.util.Formatter;
 
 public class MainActivity extends AppCompatActivity implements
         SpeechToTextListenerImpl.SpeechToTextListener,
@@ -93,6 +92,10 @@ public class MainActivity extends AppCompatActivity implements
         switch (item.getItemId()) {
             case R.id.line_login:
                 new LINELoginPage(this).openLoginPage();
+                break;
+            case R.id.line_friend_list:
+                Intent intent = new Intent(getApplicationContext(), LINEFriendListActivity.class);
+                startActivity(intent);
                 break;
             case R.id.about:
                 new AboutDialogFragment().show(mFM, getString(R.string.app_name));
