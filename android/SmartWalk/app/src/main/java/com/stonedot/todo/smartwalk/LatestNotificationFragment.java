@@ -19,10 +19,12 @@ public class LatestNotificationFragment extends Fragment {
     private TextView mSender;
     private TextView mContent;
     private TextView mTime;
+    private String mTimeFormat;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mFragment = inflater.inflate(R.layout.fragment_latest_notification, container, false);
+        mTimeFormat = getActivity().getString(R.string.notification_time_format);
         findViews();
         return mFragment;
     }
@@ -51,14 +53,6 @@ public class LatestNotificationFragment extends Fragment {
     }
 
     private String formattedTime() {
-        Date date = new Date();
-        String format = "";
-        try {
-            format = getActivity().getString(R.string.notification_time_format);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return date.toString();
-        }
-        return new SimpleDateFormat(format).format(date);
+        return new SimpleDateFormat(mTimeFormat).format(new Date());
     }
 }
