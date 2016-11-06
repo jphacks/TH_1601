@@ -56,13 +56,14 @@ public class LINEBroadcastReceiver {
     };
 
     private void receiveNotification() {
+        if(mSender.equals(SENDER_NAME_SMART_WALK)) receiveSmartWalkMessage();
+        if(mSender.equals(SENDER_NAME_LINE)) return;
+
         Formatter fm = new Formatter();
         fm.format(mActivity.getString(R.string.line_sender_format) + mContent, mSender);
         String text = fm.toString();
 
         if(isSameNotification(text)) return;
-        if(mSender.equals(SENDER_NAME_SMART_WALK)) receiveSmartWalkMessage();
-        if(mSender.equals(SENDER_NAME_LINE)) return;
 
         mGuidance.setLatestReservation(new Reservation(SNS.LINE, mSender, mContent, new Date()));
         if(mGuidance.isWorking()) mGuidance.cancelGuide();
