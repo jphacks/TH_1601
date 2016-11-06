@@ -25,7 +25,7 @@ class MessageController < ApplicationController
 
     message = {
       type: 'text',
-      text: "#{sender_user.display_name}:#{msg_str}"
+      text: "#{sender_user.display_name}: #{msg_str}"
     }
 
     logger.debug("Start pushing message...")
