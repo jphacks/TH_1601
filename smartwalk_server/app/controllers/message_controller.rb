@@ -1,3 +1,5 @@
+require 'shellwords'
+
 class MessageController < ApplicationController
   def push
     body = request.body.read
