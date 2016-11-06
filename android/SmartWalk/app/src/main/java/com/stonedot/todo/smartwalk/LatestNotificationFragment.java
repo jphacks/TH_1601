@@ -8,12 +8,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LatestNotificationFragment extends Fragment {
 
     private View mFragment;
+    private TextView mNoLatestNotification;
     private ImageView mSNS;
     private TextView mSender;
     private TextView mContent;
@@ -27,6 +30,7 @@ public class LatestNotificationFragment extends Fragment {
     }
 
     private void findViews() {
+        mNoLatestNotification = (TextView) mFragment.findViewById(R.id.no_latest_notification);
         mSNS = (ImageView) mFragment.findViewById(R.id.latest_sns_image);
         mSender = (TextView) mFragment.findViewById(R.id.latest_sender);
         mContent = (TextView) mFragment.findViewById(R.id.latest_content);
@@ -34,6 +38,7 @@ public class LatestNotificationFragment extends Fragment {
     }
 
     public void displayLatestNotification(SNS sns, String sender, String content) {
+        mNoLatestNotification.setVisibility(View.INVISIBLE);
         mSNS.setImageResource(snsIcon(sns));
         mSender.setText(sender);
         mContent.setText(content);
