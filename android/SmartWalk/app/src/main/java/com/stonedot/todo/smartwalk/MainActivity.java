@@ -1,6 +1,7 @@
 package com.stonedot.todo.smartwalk;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,10 +26,19 @@ public class MainActivity extends AppCompatActivity implements
 
     private LINEBroadcastReceiver mLINEReceiver;
 
+    private static String[] keys = {"is_not_read"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //preferenceによる読み込み
+        //ファイルが存在しなくても良いのか？
+        SharedPreferences pref = getSharedPreferences(getString(R.string.setting_file), MODE_PRIVATE);
+        boolean isNotRead = pref.getBoolean(keys[0], false);
+
+
 
         // フラグメント関係
         mFM = getSupportFragmentManager();
@@ -98,6 +108,9 @@ public class MainActivity extends AppCompatActivity implements
                 startActivity(intent);
                 break;
             case R.id.about:
+                new AboutDialogFragment().show(mFM, getString(R.string.app_name));
+                break;
+            case R.id.settings:
                 new AboutDialogFragment().show(mFM, getString(R.string.app_name));
                 break;
             default:
