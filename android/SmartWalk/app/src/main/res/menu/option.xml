@@ -5,7 +5,7 @@
         android:title="@string/line_login"/>
     <item
         android:id="@+id/line_friend_list"
-        android:title="友だち一覧" />
+        android:title="@string/line_friend" />
     <item
         android:id="@+id/about"
         android:title="@string/about"/>

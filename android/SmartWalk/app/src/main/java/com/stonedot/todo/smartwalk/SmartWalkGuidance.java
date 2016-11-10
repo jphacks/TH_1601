@@ -1,7 +1,9 @@
 package com.stonedot.todo.smartwalk;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -39,6 +41,7 @@ public class SmartWalkGuidance {
     private GuidanceListener mListener;
 
     private Activity mActivity;
+    private SharedPreferences mPref;
     private TextToSpeechManager mTTS;
     private SpeechToTextManager mSTT;
     private Reservation latestReservation;
@@ -48,6 +51,7 @@ public class SmartWalkGuidance {
 
     public SmartWalkGuidance(Activity activity, GuidanceListener listener, TextToSpeechManager tts, SpeechToTextManager sst) {
         mActivity = activity;
+        mPref = mActivity.getSharedPreferences(Preference.SMART_WALK.name(), mActivity.MODE_PRIVATE);
         mListener = listener;
         mTTS = tts;
         mSTT = sst;
@@ -70,9 +74,7 @@ public class SmartWalkGuidance {
                 break;
 
             case ConfirmReply:
-                Log.d("Guidance", "ConfirmReply");
                 notificationQueue.remove();
-                Log.d("Guidance", notificationQueue.toString());
                 if(!isNotificationQueueEmpty()) break;
                 isWorking = true;
                 mTTS.textToSpeech(t(R.string.guide_confirm_reply), GetAnswerConfirmReply);
@@ -150,10 +152,13 @@ public class SmartWalkGuidance {
     }
 
     public boolean isGuideContinuable(Guide guide) {
-        return isNotificationQueueEmpty()
+        boolean shutUp = mPref.getBoolean(Preference.SHUT_UP_WHILE_ACTIVE.name(), false);
+        boolean isActive = true;
+        return !(shutUp && isActive)
+                && (isNotificationQueueEmpty()
                 || guide == Notification
                 || guide == RequestFriend
-                || guide == ConfirmReply;
+                || guide == ConfirmReply);
     }
 
     public boolean isNotificationQueueEmpty() {
@@ -178,6 +183,8 @@ public class SmartWalkGuidance {
         if(mListener == null) return;
         mListener.onReserve(latestReservation);
     }
+
+
 
     private boolean send() {
         URL url = null;
@@ -222,7 +229,6 @@ public class SmartWalkGuidance {
         @Override
         public void responded(int code, String statusMessage, String content) {
             try {
-                Log.d("Guidance", "Responded");
                 boolean canPush = new JSONObject(content).getBoolean("can_push");
                 if(canPush) nextGuide(ConfirmReply);
                 else {

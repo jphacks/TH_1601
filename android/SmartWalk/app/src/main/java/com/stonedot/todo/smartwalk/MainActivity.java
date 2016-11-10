@@ -3,9 +3,7 @@ package com.stonedot.todo.smartwalk;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,19 +24,10 @@ public class MainActivity extends AppCompatActivity implements
 
     private LINEBroadcastReceiver mLINEReceiver;
 
-    private static String[] keys = {"is_not_read"};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //preferenceによる読み込み
-        //ファイルが存在しなくても良いのか？
-        SharedPreferences pref = getSharedPreferences(getString(R.string.setting_file), MODE_PRIVATE);
-        boolean isNotRead = pref.getBoolean(keys[0], false);
-
-
 
         // フラグメント関係
         mFM = getSupportFragmentManager();
@@ -53,13 +42,11 @@ public class MainActivity extends AppCompatActivity implements
 
         // SNS通知関係
         NotificationServiceAccess.showNotificationAccessSettingMenu(this);
-
         mLINEReceiver = new LINEBroadcastReceiver(this, mGuidance);
     }
 
     @Override
     public void onTextToSpeechFinished(Guide guide) {
-
         mGuidance.nextGuide(guide);
     }
 
@@ -111,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements
                 new AboutDialogFragment().show(mFM, getString(R.string.app_name));
                 break;
             case R.id.settings:
-                new AboutDialogFragment().show(mFM, getString(R.string.app_name));
+                new OptionDialogFragment().show(mFM, getString(R.string.app_name));
                 break;
             default:
                 break;
