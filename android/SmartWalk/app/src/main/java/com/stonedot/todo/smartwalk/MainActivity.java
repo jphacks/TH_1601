@@ -12,6 +12,7 @@ public class MainActivity extends AppCompatActivity implements
         SpeechToTextListenerImpl.SpeechToTextListener,
         TextToSpeechProgressListener.TextToSpeechListener,
         SmartWalkGuidance.GuidanceListener,
+        LatestNotificationFragment.LatestNotificationListener,
         ReservationListFragment.ReservationListListener {
 
     private TextToSpeechManager mTTS;
@@ -73,9 +74,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onItemClicked(Reservation reservation) {
-        mGuidance.setLatestReservation(reservation);
-        mGuidance.nextGuide(Guide.DecideReply, getString(R.string.decide_reply_word));
+    public void onReservationItemClicked(Reservation reservation) {
+        mGuidance.nextGuide(reservation, Guide.Call);
+    }
+
+    @Override
+    public void onLatestNotificationClicked(Reservation notification) {
+        mGuidance.nextGuide(notification, Guide.Call);
     }
 
     @Override
@@ -105,5 +110,4 @@ public class MainActivity extends AppCompatActivity implements
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

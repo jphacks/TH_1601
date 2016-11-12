@@ -8,6 +8,7 @@
     tools:context="com.stonedot.todo.smartwalk.LatestNotificationFragment">
 
     <RelativeLayout
+        android:id="@+id/latest_notification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/list_frame"

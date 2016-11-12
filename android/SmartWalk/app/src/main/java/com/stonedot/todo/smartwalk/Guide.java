@@ -18,5 +18,7 @@ public enum Guide {
     Send,
     Finish,
     Reserve,
+    Call,
+    NotFriend,
     Failed
 }

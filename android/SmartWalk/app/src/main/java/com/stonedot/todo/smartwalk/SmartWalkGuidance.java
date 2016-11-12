@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.SharedPreferences;
 import android.os.PowerManager;
-import android.util.Log;
-import android.view.WindowManager;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,12 +15,14 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.stonedot.todo.smartwalk.Guide.Call;
 import static com.stonedot.todo.smartwalk.Guide.ConfirmReply;
 import static com.stonedot.todo.smartwalk.Guide.ConfirmSend;
 import static com.stonedot.todo.smartwalk.Guide.DecideReply;
 import static com.stonedot.todo.smartwalk.Guide.Finish;
 import static com.stonedot.todo.smartwalk.Guide.GetAnswerConfirmReply;
 import static com.stonedot.todo.smartwalk.Guide.GetAnswerConfirmSend;
+import static com.stonedot.todo.smartwalk.Guide.NotFriend;
 import static com.stonedot.todo.smartwalk.Guide.Notification;
 import static com.stonedot.todo.smartwalk.Guide.RepeatReply;
 import static com.stonedot.todo.smartwalk.Guide.RequestFriend;
@@ -50,6 +49,7 @@ public class SmartWalkGuidance {
     private Reservation latestReservation;
     private ArrayDeque<String> notificationQueue = new ArrayDeque<>();
     private boolean isWorking = false;
+    private boolean isCalling = false;
     private String mMessage;
 
     public SmartWalkGuidance(Activity activity, GuidanceListener listener, TextToSpeechManager tts, SpeechToTextManager sst) {
@@ -74,7 +74,8 @@ public class SmartWalkGuidance {
                 break;
 
             case RequestFriend:
-                isFriendRequest(requestFriendCallback);
+                isCalling = false;
+                requestWhetherFriend(requestFriendCallback);
                 break;
 
             case ConfirmReply:
@@ -89,11 +90,11 @@ public class SmartWalkGuidance {
                 break;
 
             case DecideReply:
+                isWorking = true;
                 if(!text.equals(t(R.string.decide_reply_word))) {
                     mTTS.textToSpeech(t(R.string.guide_reserve), Reserve);
                     break;
                 }
-                isWorking = true;
                 mTTS.textToSpeech(t(R.string.guide_input_message), StartReply);
                 break;
 
@@ -141,6 +142,15 @@ public class SmartWalkGuidance {
                 reserve();
                 break;
 
+            case Call:
+                isCalling = true;
+                requestWhetherFriend(requestFriendCallback);
+                break;
+
+            case NotFriend:
+                mTTS.textToSpeech(t(R.string.guide_be_friend_to_reply), Finish);
+                break;
+
             case Failed:
                 mTTS.textToSpeech(t(R.string.guide_input_speech_failed), Finish);
                 break;
@@ -153,6 +163,16 @@ public class SmartWalkGuidance {
 
     public void nextGuide(Guide guide) {
         nextGuide(guide, "");
+    }
+
+    public void nextGuide(Reservation reservation, Guide guide, String message) {
+        setLatestReservation(reservation);
+        nextGuide(guide, message);
+    }
+
+    public void nextGuide(Reservation reservation, Guide guide) {
+        setLatestReservation(reservation);
+        nextGuide(guide);
     }
 
     public boolean isGuideContinuable(Guide guide) {
@@ -209,7 +229,7 @@ public class SmartWalkGuidance {
         return true;
     }
 
-    private void isFriendRequest(HttpJSONClient.Responded callback) {
+    private void requestWhetherFriend(HttpJSONClient.Responded callback) {
         URL url = null;
         try {
             url = new URL("https://smartwalk.stonedot.com/message/can_push");
@@ -232,10 +252,10 @@ public class SmartWalkGuidance {
         public void responded(int code, String statusMessage, String content) {
             try {
                 boolean canPush = new JSONObject(content).getBoolean("can_push");
-                if(canPush) nextGuide(ConfirmReply);
+                if(canPush) nextGuide(isCalling ? DecideReply : ConfirmReply, mActivity.getString(R.string.decide_reply_word));
                 else {
-                    notificationQueue.remove();
-                    mTTS.textToSpeech(t(R.string.guide_be_friend_to_reply), Finish);
+                    if(!notificationQueue.isEmpty()) notificationQueue.remove();
+                    nextGuide(NotFriend);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

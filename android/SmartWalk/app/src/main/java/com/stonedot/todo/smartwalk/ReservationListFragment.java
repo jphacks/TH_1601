@@ -14,7 +14,7 @@ import android.widget.ListView;
 public class ReservationListFragment extends Fragment {
 
     public interface ReservationListListener {
-        void onItemClicked(Reservation reservation);
+        void onReservationItemClicked(Reservation reservation);
     }
     private ReservationListListener mListener;
 
@@ -68,7 +68,7 @@ public class ReservationListFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ListView listView = (ListView) adapterView;
                 Reservation item = (Reservation) listView.getItemAtPosition(i);
-                mListener.onItemClicked(item);
+                mListener.onReservationItemClicked(item);
                 mAdapter.remove(item);
             }
         };
