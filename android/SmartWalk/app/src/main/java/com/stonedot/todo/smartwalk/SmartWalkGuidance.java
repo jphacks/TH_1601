@@ -1,7 +1,9 @@
 package com.stonedot.todo.smartwalk;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.SharedPreferences;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -42,6 +44,7 @@ public class SmartWalkGuidance {
 
     private Activity mActivity;
     private SharedPreferences mPref;
+    private PowerManager mPowerManager;
     private TextToSpeechManager mTTS;
     private SpeechToTextManager mSTT;
     private Reservation latestReservation;
@@ -52,6 +55,7 @@ public class SmartWalkGuidance {
     public SmartWalkGuidance(Activity activity, GuidanceListener listener, TextToSpeechManager tts, SpeechToTextManager sst) {
         mActivity = activity;
         mPref = mActivity.getSharedPreferences(Preference.SMART_WALK.name(), mActivity.MODE_PRIVATE);
+        mPowerManager = (PowerManager) mActivity.getSystemService(Service.POWER_SERVICE);
         mListener = listener;
         mTTS = tts;
         mSTT = sst;
@@ -152,13 +156,11 @@ public class SmartWalkGuidance {
     }
 
     public boolean isGuideContinuable(Guide guide) {
-        boolean shutUp = mPref.getBoolean(Preference.SHUT_UP_WHILE_ACTIVE.name(), false);
-        boolean isActive = true;
-        return !(shutUp && isActive)
-                && (isNotificationQueueEmpty()
-                || guide == Notification
-                || guide == RequestFriend
-                || guide == ConfirmReply);
+        boolean allowAnyTime = guide == Notification || guide == RequestFriend || guide == ConfirmReply;
+        boolean shutUpWhileActive = mPref.getBoolean(Preference.SHUT_UP_WHILE_ACTIVE.name(), false);
+        boolean isActive = mPowerManager.isScreenOn();
+        boolean shutUp = (shutUpWhileActive && isActive) && guide == Notification;
+        return  !shutUp && (isNotificationQueueEmpty() || allowAnyTime);
     }
 
     public boolean isNotificationQueueEmpty() {
