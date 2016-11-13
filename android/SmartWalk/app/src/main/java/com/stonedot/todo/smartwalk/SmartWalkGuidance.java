@@ -19,8 +19,10 @@ import static com.stonedot.todo.smartwalk.Guide.Call;
 import static com.stonedot.todo.smartwalk.Guide.ConfirmReply;
 import static com.stonedot.todo.smartwalk.Guide.ConfirmSend;
 import static com.stonedot.todo.smartwalk.Guide.DecideReply;
+import static com.stonedot.todo.smartwalk.Guide.DecideReserve;
 import static com.stonedot.todo.smartwalk.Guide.Finish;
 import static com.stonedot.todo.smartwalk.Guide.GetAnswerConfirmReply;
+import static com.stonedot.todo.smartwalk.Guide.GetAnswerConfirmReserve;
 import static com.stonedot.todo.smartwalk.Guide.GetAnswerConfirmSend;
 import static com.stonedot.todo.smartwalk.Guide.NotFriend;
 import static com.stonedot.todo.smartwalk.Guide.Notification;
@@ -79,7 +81,7 @@ public class SmartWalkGuidance {
                 break;
 
             case ConfirmReply:
-                notificationQueue.remove();
+                if(!notificationQueue.isEmpty()) notificationQueue.remove();
                 if(!isNotificationQueueEmpty()) break;
                 isWorking = true;
                 mTTS.textToSpeech(t(R.string.guide_confirm_reply), GetAnswerConfirmReply);
@@ -89,13 +91,25 @@ public class SmartWalkGuidance {
                 mSTT.speechToText(DecideReply);
                 break;
 
+            case GetAnswerConfirmReserve:
+                mSTT.speechToText(DecideReserve);
+                break;
+
             case DecideReply:
                 isWorking = true;
-                if(!text.equals(t(R.string.decide_reply_word))) {
+                if(text.equals(t(R.string.decide_reply_word))) {
+                    mTTS.textToSpeech(t(R.string.guide_input_message), StartReply);
+                    break;
+                }
+                mTTS.textToSpeech(t(R.string.guide_confirm_reserve), GetAnswerConfirmReserve);
+                break;
+
+            case DecideReserve:
+                if(text.equals(t(R.string.decide_reply_word))) {
                     mTTS.textToSpeech(t(R.string.guide_reserve), Reserve);
                     break;
                 }
-                mTTS.textToSpeech(t(R.string.guide_input_message), StartReply);
+                mTTS.textToSpeech(t(R.string.guide_confirm_reply), GetAnswerConfirmReply);
                 break;
 
             case StartReply:

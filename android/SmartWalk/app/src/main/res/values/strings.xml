@@ -12,6 +12,7 @@
     <string name="line_sender_format">%sさんからのラインの通知です。</string>
 
     <string name="decide_reply_word">返信</string>
+    <string name="decide_reserve_word">保留</string>
     <string name="decide_send_word">送信</string>
     <string name="notification_time_format">MM月dd日 HH:mm:ss</string>
 
@@ -19,6 +20,7 @@
     <string name="line_register_failed">LINEの登録に失敗しました。</string>
 
     <string name="guide_confirm_reply">「返信」と言うと返信します</string>
+    <string name="guide_confirm_reserve">「保留」と言うと保留します</string>
     <string name="guide_be_friend_to_reply">メッセージを送信するには、スマートウォークで友達登録を行ってください</string>
     <string name="guide_reserve">保留されます</string>
     <string name="guide_input_message">メッセージを入力してください</string>
